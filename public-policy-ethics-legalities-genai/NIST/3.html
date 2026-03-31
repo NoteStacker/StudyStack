@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Risk Management </title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4fa 0%, #e9eef4 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .notes-container {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .slide-header {
+            background: #0a2a44;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 3px solid #ffb347;
+        }
+
+        .slide-badge {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #ffb347;
+            letter-spacing: 0.5px;
+        }
+
+        .slide-title {
+            color: white;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .slide-title i {
+            color: #ffb347;
+            margin-right: 0.6rem;
+        }
+
+        .tab-nav {
+            display: flex;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 2rem;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.6rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .tab-btn i {
+            font-size: 1rem;
+        }
+
+        .tab-btn.active {
+            color: #0a2a44;
+            border-bottom-color: #ffb347;
+            background: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: #0a2a44;
+            background: #f1f5f9;
+        }
+
+        .tab-pane {
+            display: none;
+            padding: 2rem 2rem 2rem 2rem;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .tab-pane.active-pane {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* Risk Cards */
+        .risk-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .risk-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.2rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .risk-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            border-color: #ffb347;
+        }
+
+        .risk-icon {
+            width: 50px;
+            height: 50px;
+            background: #fef9e6;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: #ffb347;
+            font-size: 1.5rem;
+        }
+
+        .risk-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+            color: #0a2a44;
+        }
+
+        .risk-card p {
+            color: #475569;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: #f8fafc;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .comparison-table th, .comparison-table td {
+            padding: 0.9rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .comparison-table th {
+            background: #eef2ff;
+            color: #0a2a44;
+            font-weight: 600;
+        }
+
+        .insight-box {
+            background: #eef2ff;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            border-left: 4px solid #0a2a44;
+            margin: 1.5rem 0;
+        }
+
+        .insight-gold {
+            background: #fef9e6;
+            border-left-color: #ffb347;
+        }
+
+        .insight-danger {
+            background: #fee2e2;
+            border-left-color: #dc2626;
+        }
+
+        .qa-block {
+            margin-bottom: 2rem;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.2rem;
+            overflow: hidden;
+        }
+
+        .qa-question {
+            background: #f1f5f9;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            color: #0a2a44;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .qa-question i {
+            color: #ffb347;
+            font-size: 1.2rem;
+        }
+
+        .qa-answer {
+            padding: 1.2rem 1.5rem;
+            color: #334155;
+            line-height: 1.5;
+            background: white;
+        }
+
+        .mcq-item {
+            background: #f9fafb;
+            margin-bottom: 1rem;
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .mcq-question {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #0f172a;
+        }
+
+        .mcq-options {
+            padding-left: 1rem;
+            margin-bottom: 0.5rem;
+            color: #475569;
+        }
+
+        .mcq-answer {
+            margin-top: 0.5rem;
+            font-weight: 600;
+            color: #2b6e3c;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 0.6rem;
+        }
+
+        .revision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .revision-card {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 1rem;
+            border-left: 4px solid #ffb347;
+        }
+
+        .nav-footer {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 0.6rem 1.4rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1e293b;
+        }
+
+        .nav-btn:hover {
+            background: #0a2a44;
+            color: white;
+            border-color: #0a2a44;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #e2e8f0;
+            color: #64748b;
+        }
+
+        .page-indicator {
+            font-size: 0.85rem;
+            background: #e9eef3;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            color: #0a2a44;
+            font-weight: 500;
+        }
+
+        hr {
+            margin: 1rem 0;
+        }
+
+        .danger-badge {
+            background: #dc2626;
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-left: 0.5rem;
+        }
+
+        @media (max-width: 680px) {
+            .tab-btn span:not(i) {
+                display: none;
+            }
+            .tab-btn i {
+                font-size: 1.2rem;
+                margin: 0;
+            }
+            .tab-nav {
+                padding: 0 1rem;
+            }
+            .tab-pane {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="notes-container">
+    <!-- Header -->
+    <div class="slide-header">
+        <div class="slide-title">
+            <i class="fas fa-shield-alt"></i>Why AI Risk is Different from Traditional IT Risk
+        </div>
+        <div class="slide-badge">
+            <i class="fas fa-exclamation-triangle"></i> Deterministic vs. Probabilistic | Black Box | Scale & Speed | Ethics
+        </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-nav" id="tabNav">
+        <button class="tab-btn active" data-tab="summary"><i class="fas fa-chalkboard-user"></i><span> Summary</span></button>
+        <button class="tab-btn" data-tab="risks"><i class="fas fa-bug"></i><span> 4 AI Risks</span></button>
+        <button class="tab-btn" data-tab="longqa"><i class="fas fa-pen-ruler"></i><span> 6 Long Q&A</span></button>
+        <button class="tab-btn" data-tab="mcq"><i class="fas fa-check-double"></i><span> 6 MCQs</span></button>
+        <button class="tab-btn" data-tab="revision"><i class="fas fa-memory"></i><span> Quick Revision</span></button>
+	<a href="4.html"><button class="tab-btn">Next Topic</button></a>
+    </div>
+
+    <!-- PANEL 1: SUMMARY -->
+    <div class="tab-pane active-pane" id="summary-pane">
+        <div class="insight-box" style="background:#0a2a44; color:white; border-left-color:#ffb347;">
+            <i class="fas fa-gavel" style="margin-right: 10px;"></i> 
+            <strong>"If you treat AI risks as traditional IT security risks like cybersecurity, you will fail."</strong>
+            <br>Traditional IT risk management is <strong>necessary but not sufficient</strong> for AI systems.
+        </div>
+
+        <h3 style="color:#0a2a44; margin-top: 1.5rem;"><i class="fas fa-chart-line"></i> The Fundamental Difference</h3>
+        <table class="comparison-table">
+            <thead>
+                <tr><th>Dimension</th><th>Traditional IT Systems</th><th>AI Systems</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Behavior</strong></td><td>Deterministic — same input = same output</td><td>Probabilistic — outputs have statistical uncertainty</td></tr>
+                <tr><td><strong>Logic</strong></td><td>Rules explicitly coded by humans</td><td>Rules learned from data; patterns emerge</td></tr>
+                <tr><td><strong>Predictability</strong></td><td>Failures predictable and traceable</td><td>Failures emergent, unexpected, opaque</td></tr>
+                <tr><td><strong>Explainability</strong></td><td>Traceable code path</td><td>Even creators may not understand decisions</td></tr>
+            </tbody>
+        </table>
+
+        <div class="insight-box insight-gold">
+            <i class="fas fa-quote-left"></i> <strong>The Governing Insight:</strong> Traditional security controls are necessary but not sufficient. AI requires new frameworks for explainability, bias detection, and ethical governance.
+        </div>
+    </div>
+
+    <!-- PANEL 2: THE 4 AI RISKS -->
+    <div class="tab-pane" id="risks-pane">
+        <h3 style="color:#0a2a44; margin-bottom: 1rem;"><i class="fas fa-exclamation-triangle"></i> The Four Key AI Risks</h3>
+        <div class="risk-grid">
+            <div class="risk-card">
+                <div class="risk-icon"><i class="fas fa-cube"></i></div>
+                <h3>1. Black Box Problem</h3>
+                <p>AI models have billions of parameters. Asking "why was this loan rejected?" yields no simple answer. Decisions are buried across complex mathematical relationships.</p>
+                <p style="margin-top: 0.5rem; font-weight: 500; color:#dc2626;"><strong>Consequence:</strong> If you cannot explain a risk, you cannot defend it.</p>
+            </div>
+            <div class="risk-card">
+                <div class="risk-icon"><i class="fas fa-database"></i></div>
+                <h3>2. Data Dependency</h3>
+                <p>AI doesn't think—it learns from data. If training data has bias, errors, or historical discrimination, AI learns and amplifies it.</p>
+                <p style="margin-top: 0.5rem; font-weight: 500; color:#dc2626;"><strong>Garbage In = Dangerous Out</strong> — not just wrong, but dangerous at scale.</p>
+            </div>
+            <div class="risk-card">
+                <div class="risk-icon"><i class="fas fa-rocket"></i></div>
+                <h3>3. Scale & Speed Risk</h3>
+                <p>One model = millions of decisions per day. Errors propagate instantly across entire customer base. No gradual failure—instantaneous and systemic.</p>
+                <p style="margin-top: 0.5rem; font-weight: 500; color:#dc2626;"><strong>Example:</strong> Pricing error loses $5M in one hour.</p>
+            </div>
+            <div class="risk-card">
+                <div class="risk-icon"><i class="fas fa-balance-scale"></i></div>
+                <h3>4. Ethics & Fairness Risk <span class="danger-badge">MOST DANGEROUS</span></h3>
+                <p>AI moves beyond tech into society. It can discriminate without intent, reinforce historical inequalities, and create invisible systemic bias—automatically.</p>
+                <p style="margin-top: 0.5rem; font-weight: 500; color:#dc2626;"><strong>Consequence:</strong> Reputational destruction, regulatory action, trust erosion.</p>
+            </div>
+        </div>
+
+        <div class="insight-box insight-danger">
+            <i class="fas fa-skull-crosswalk"></i> <strong>Why Ethics & Fairness is the Most Dangerous:</strong>
+            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                <li>Reputational destruction is irreversible — viral headlines destroy decades of brand equity</li>
+                <li>Regulatory consequences are severe — fines, operational freezes, legal liability</li>
+                <li>Harm accumulates invisibly — bias can operate undetected for months</li>
+                <li>Erodes trust across all stakeholders — customers, investors, talent, partners</li>
+            </ul>
+            <p style="margin-top: 0.8rem;"><strong>A business can survive technical failure; it may not survive being labeled as discriminatory.</strong></p>
+        </div>
+    </div>
+
+    <!-- PANEL 3: 6 LONG QUESTIONS + ANSWERS -->
+    <div class="tab-pane" id="longqa-pane">
+        <!-- Q1 -->
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-question-circle"></i> 1. Why does treating AI risk as traditional IT risk lead to failure? What is the fundamental difference?</div>
+            <div class="qa-answer"><strong>Answer:</strong> Traditional IT systems are deterministic—same input always produces same output, rules explicitly coded, failures predictable. AI systems are probabilistic—they learn patterns, outputs have uncertainty, even creators may not understand decisions. Traditional controls are necessary but not sufficient because you cannot audit a black box, predict emergent bias, or explain probabilistic decisions using deterministic logic.</div>
+        </div>
+        <!-- Q2 -->
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-cube"></i> 2. What is the "Black Box Problem" and why does it create issues for business leaders?</div>
+            <div class="qa-answer"><strong>Answer:</strong> The Black Box Problem refers to opacity in AI models with billions of parameters—decisions are buried across complex mathematical relationships. For leaders: accountability without explainability, regulatory risk, trust deficit, and operational blind spots. <strong>If you cannot explain a risk, you cannot defend it.</strong></div>
+        </div>
+        <!-- Q3 -->
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-database"></i> 3. Explain "Garbage In = Dangerous Out" in AI. How is this different from traditional IT?</div>
+            <div class="qa-answer"><strong>Answer:</strong> AI learns from data; if training data contains bias or historical discrimination, AI learns and amplifies it. Traditional IT: bad data = wrong output (system fails). AI: bad data = dangerous out (system works but works unfairly). Historical discrimination becomes automated and scaled across millions of decisions.</div>
+        </div>
+        <!-- Q4 -->
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-rocket"></i> 4. Why is scale and speed risk uniquely dangerous in AI? Provide an example.</div>
+            <div class="qa-answer"><strong>Answer:</strong> One model deployed = millions of decisions per day. Errors propagate instantly across entire customer base. Traditional IT: isolated bug affects one transaction. AI: flawed model affects every decision simultaneously. <strong>Example:</strong> Pricing error sells products below cost—$5M lost in one hour before detection.</div>
+        </div>
+        <!-- Q5 -->
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-balance-scale"></i> 5. How does AI introduce ethics and fairness risks that don't exist in traditional IT?</div>
+            <div class="qa-answer"><strong>Answer:</strong> AI moves beyond technology into society. Risks: discrimination without intent, reinforced historical inequality, invisible systemic bias, all happening automatically. This is a governance issue because traditional controls don't detect bias, and organizations are liable for AI discrimination even if unintended.</div>
+        </div>
+        <!-- Q6 - MOST DANGEROUS RISK -->
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-skull"></i> 6. Of the four AI risks, which is the most dangerous for a business and why?</div>
+            <div class="qa-answer"><strong>Answer:</strong> <strong>Ethics and Fairness Risk is the most dangerous.</strong> Reasons:<br><br>
+            <strong>1. Reputational destruction is irreversible:</strong> Viral headlines destroy decades of brand equity overnight. Competitors instantly capitalize with "ethical alternative" campaigns.<br>
+            <strong>2. Regulatory consequences are severe:</strong> Fair lending laws carry significant penalties; regulators can freeze operations; legal settlements run into millions or billions.<br>
+            <strong>3. Harm accumulates invisibly:</strong> Unlike a system crash that triggers alerts, bias operates undetected for months. Damage accumulates silently before discovery.<br>
+            <strong>4. Erodes trust across all stakeholders:</strong> Customers leave permanently, investors lose confidence, talent avoids unethical organizations.<br>
+            <strong>5. Combines other risks:</strong> Black Box prevents detection, Data Dependency automates historical discrimination, Scale/Speed amplifies impact instantly.<br><br>
+            <strong>A business can survive technical failure; it may not survive being labeled as discriminatory.</strong></div>
+        </div>
+    </div>
+
+    <!-- PANEL 4: 6 MCQs -->
+    <div class="tab-pane" id="mcq-pane">
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 1. What is the fundamental difference between traditional IT and AI systems?</div>
+            <div class="mcq-options">A) AI systems are faster<br>B) Traditional IT is deterministic; AI is probabilistic<br>C) AI requires less testing<br>D) Traditional IT uses more data</div>
+            <div class="mcq-answer">✅ <strong>Answer: B</strong> (Traditional IT deterministic; AI probabilistic)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 2. Why does the "Black Box Problem" create regulatory risk?</div>
+            <div class="mcq-options">A) AI models are too slow<br>B) Regulators demand explainability that organizations cannot provide<br>C) Black boxes are cheaper<br>D) AI requires less documentation</div>
+            <div class="mcq-answer">✅ <strong>Answer: B</strong> (Regulators demand explanations; black boxes cannot provide them)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 3. What does "Garbage In = Dangerous Out" mean for AI?</div>
+            <div class="mcq-options">A) AI crashes with bad data<br>B) Bad data makes AI faster<br>C) AI learns and amplifies bias from flawed training data<br>D) Errors are harmless</div>
+            <div class="mcq-answer">✅ <strong>Answer: C</strong> (AI learns and amplifies bias from flawed training data)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 4. Why is scale and speed risk uniquely dangerous?</div>
+            <div class="mcq-options">A) AI models are too slow<br>B) A single flawed model affects millions of decisions simultaneously<br>C) Scale makes AI safer<br>D) AI only affects one user at a time</div>
+            <div class="mcq-answer">✅ <strong>Answer: B</strong> (One model affects millions of decisions instantly)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 5. Why are traditional security controls "necessary but not sufficient" for AI?</div>
+            <div class="mcq-options">A) AI doesn't need security<br>B) AI introduces new risks (explainability, bias, fairness) that traditional controls don't address<br>C) AI is less risky<br>D) Security controls make AI worse</div>
+            <div class="mcq-answer">✅ <strong>Answer: B</strong> (AI requires new frameworks for explainability, bias detection, ethical governance)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 6. Which AI risk is considered the most dangerous for a business and why?</div>
+            <div class="mcq-options">A) Black Box Problem — because developers can't understand code<br>B) Data Dependency — because data is expensive<br>C) Scale/Speed Risk — because errors happen quickly<br>D) Ethics and Fairness Risk — because reputational destruction is irreversible, regulatory consequences severe, and trust erosion affects all stakeholders</div>
+            <div class="mcq-answer">✅ <strong>Answer: D</strong> (Ethics and Fairness Risk is most dangerous; reputational destruction is irreversible, regulatory consequences severe, and trust erosion affects all stakeholders)</div>
+        </div>
+    </div>
+
+    <!-- PANEL 5: QUICK REVISION -->
+    <div class="tab-pane" id="revision-pane">
+        <div class="revision-grid">
+            <div class="revision-card"><i class="fas fa-chart-line"></i> <strong>Deterministic vs Probabilistic</strong><br>Traditional IT = predictable; AI = statistical uncertainty</div>
+            <div class="revision-card"><i class="fas fa-cube"></i> <strong>Black Box Problem</strong><br>Billions of parameters; decisions cannot be explained</div>
+            <div class="revision-card"><i class="fas fa-database"></i> <strong>Data Dependency</strong><br>Garbage In = Dangerous Out; bias in = bias out at scale</div>
+            <div class="revision-card"><i class="fas fa-rocket"></i> <strong>Scale & Speed</strong><br>One model, millions of decisions; failure is instantaneous</div>
+            <div class="revision-card"><i class="fas fa-balance-scale"></i> <strong>Ethics & Fairness</strong><br>Discrimination without intent; reinforces inequality</div>
+            <div class="revision-card"><i class="fas fa-skull"></i> <strong>⚠️ MOST DANGEROUS</strong><br>Ethics & Fairness Risk — reputational destruction, regulatory consequences, invisible harm</div>
+        </div>
+        <hr>
+        <div style="background:#f1f5f9; border-radius: 1rem; padding: 1rem;">
+            <i class="fas fa-lightbulb"></i> <strong>Exam Tip:</strong> Traditional security controls are necessary but not sufficient. AI requires new frameworks for explainability, bias detection, and ethical governance.
+        </div>
+        <div style="margin-top: 1rem; padding: 1rem; background: #fee2e2; border-radius: 1rem; border-left: 4px solid #dc2626;">
+            <i class="fas fa-quote-left"></i> <strong>Key Insight:</strong> "A business can survive technical failure; it may not survive being labeled as discriminatory."
+        </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="nav-footer">
+        <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i> Previous</button>
+        <div class="page-indicator" id="pageIndicator">Summary (1/5)</div>
+        <button class="nav-btn" id="nextBtn">Next <i class="fas fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<script>
+    const tabs = [
+        { id: 'summary', label: 'Summary' },
+        { id: 'risks', label: '4 AI Risks' },
+        { id: 'longqa', label: '6 Long Q&A' },
+        { id: 'mcq', label: '6 MCQs' },
+        { id: 'revision', label: 'Quick Revision' }
+    ];
+    
+    let currentIndex = 0;
+
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const panes = document.querySelectorAll('.tab-pane');
+
+    function activateTab(index) {
+        tabBtns.forEach((btn, i) => {
+            if (i === index) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        panes.forEach((pane, i) => {
+            if (i === index) pane.classList.add('active-pane');
+            else pane.classList.remove('active-pane');
+        });
+        currentIndex = index;
+        const indicator = document.getElementById('pageIndicator');
+        if (indicator) {
+            indicator.innerText = `${tabs[currentIndex].label} (${currentIndex+1}/${tabs.length})`;
+        }
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (prevBtn) prevBtn.disabled = (currentIndex === 0);
+if (currentIndex === tabs.length-1) {
+        window.location.href = "4.html";
+    }
+
+        if (nextBtn) nextBtn.disabled = (currentIndex === tabs.length-1);
+    }
+
+    tabBtns.forEach((btn, idx) => {
+        btn.addEventListener('click', () => activateTab(idx));
+    });
+
+    document.getElementById('prevBtn')?.addEventListener('click', () => {
+        if (currentIndex > 0) activateTab(currentIndex - 1);
+    });
+    document.getElementById('nextBtn')?.addEventListener('click', () => {
+        if (currentIndex < tabs.length - 1) activateTab(currentIndex + 1);
+    });
+
+    // Map data-tab to index for initial consistency
+    const dataTabMap = { summary: 0, risks: 1, longqa: 2, mcq: 3, revision: 4 };
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        const tabId = btn.getAttribute('data-tab');
+        const idx = dataTabMap[tabId];
+        if (idx !== undefined) {
+            btn.onclick = () => activateTab(idx);
+        }
+    });
+
+    activateTab(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Risk Management | Introducing the NIST AI Risk Management Framework</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4fa 0%, #e9eef4 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .notes-container {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .slide-header {
+            background: #0a2a44;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 3px solid #ffb347;
+        }
+
+        .slide-badge {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #ffb347;
+            letter-spacing: 0.5px;
+        }
+
+        .slide-title {
+            color: white;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .slide-title i {
+            color: #ffb347;
+            margin-right: 0.6rem;
+        }
+
+        .tab-nav {
+            display: flex;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 2rem;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.6rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .tab-btn i {
+            font-size: 1rem;
+        }
+
+        .tab-btn.active {
+            color: #0a2a44;
+            border-bottom-color: #ffb347;
+            background: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: #0a2a44;
+            background: #f1f5f9;
+        }
+
+        .tab-pane {
+            display: none;
+            padding: 2rem 2rem 2rem 2rem;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .tab-pane.active-pane {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* Framework Cards */
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .framework-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .framework-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            border-color: #ffb347;
+        }
+
+        .framework-icon {
+            width: 55px;
+            height: 55px;
+            background: #fef9e6;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: #ffb347;
+            font-size: 1.6rem;
+        }
+
+        .framework-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
+            color: #0a2a44;
+        }
+
+        .framework-card p {
+            color: #475569;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .info-box {
+            background: #eef2ff;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            border-left: 4px solid #0a2a44;
+            margin: 1.5rem 0;
+        }
+
+        .info-gold {
+            background: #fef9e6;
+            border-left-color: #ffb347;
+        }
+
+        .info-danger {
+            background: #fee2e2;
+            border-left-color: #dc2626;
+        }
+
+        .timeline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+            justify-content: space-between;
+        }
+
+        .timeline-item {
+            flex: 1;
+            text-align: center;
+            padding: 1rem;
+            background: #f8fafc;
+            border-radius: 0.75rem;
+            min-width: 150px;
+        }
+
+        .timeline-year {
+            font-weight: 700;
+            color: #0a2a44;
+            font-size: 1.2rem;
+        }
+
+        .nist-history {
+            background: linear-gradient(135deg, #fef9e6 0%, #fff4e0 100%);
+            border-radius: 1rem;
+            padding: 1.2rem;
+            margin: 1rem 0;
+            border-left: 4px solid #ffb347;
+        }
+
+        .characteristics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        .characteristic {
+            background: #f1f5f9;
+            padding: 0.6rem 1rem;
+            border-radius: 2rem;
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #0a2a44;
+        }
+
+        .qa-block {
+            margin-bottom: 2rem;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.2rem;
+            overflow: hidden;
+        }
+
+        .qa-question {
+            background: #f1f5f9;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            color: #0a2a44;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .qa-question i {
+            color: #ffb347;
+            font-size: 1.2rem;
+        }
+
+        .qa-answer {
+            padding: 1.2rem 1.5rem;
+            color: #334155;
+            line-height: 1.5;
+            background: white;
+        }
+
+        .mcq-item {
+            background: #f9fafb;
+            margin-bottom: 1rem;
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .mcq-question {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #0f172a;
+        }
+
+        .mcq-options {
+            padding-left: 1rem;
+            margin-bottom: 0.5rem;
+            color: #475569;
+        }
+
+        .mcq-answer {
+            margin-top: 0.5rem;
+            font-weight: 600;
+            color: #2b6e3c;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 0.6rem;
+        }
+
+        .revision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .revision-card {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 1rem;
+            border-left: 4px solid #ffb347;
+        }
+
+        .nav-footer {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 0.6rem 1.4rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1e293b;
+        }
+
+        .nav-btn:hover {
+            background: #0a2a44;
+            color: white;
+            border-color: #0a2a44;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #e2e8f0;
+            color: #64748b;
+        }
+
+        .page-indicator {
+            font-size: 0.85rem;
+            background: #e9eef3;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            color: #0a2a44;
+            font-weight: 500;
+        }
+
+        hr {
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 680px) {
+            .tab-btn span:not(i) {
+                display: none;
+            }
+            .tab-btn i {
+                font-size: 1.2rem;
+                margin: 0;
+            }
+            .tab-nav {
+                padding: 0 1rem;
+            }
+            .tab-pane {
+                padding: 1.2rem;
+            }
+            .timeline-item {
+                min-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="notes-container">
+    <!-- Header -->
+    <div class="slide-header">
+        <div class="slide-title">
+            <i class="fas fa-shield-alt"></i> Slide 6 · Introducing the NIST AI Risk Management Framework
+        </div>
+        <div class="slide-badge">
+            <i class="fas fa-building"></i> NIST AI RMF 1.0 | Voluntary | Risk-Based | Iterative
+        </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-nav" id="tabNav">
+        <button class="tab-btn active" data-tab="summary"><i class="fas fa-info-circle"></i><span> Overview</span></button>
+        <button class="tab-btn" data-tab="functions"><i class="fas fa-diagram-project"></i><span> 4 Functions</span></button>
+        <button class="tab-btn" data-tab="longqa"><i class="fas fa-pen-ruler"></i><span> 5 Long Q&A</span></button>
+        <button class="tab-btn" data-tab="mcq"><i class="fas fa-check-double"></i><span> 5 MCQs</span></button>
+        <button class="tab-btn" data-tab="revision"><i class="fas fa-memory"></i><span> Quick Revision</span></button>
+	<a href="6.html"><button class="tab-btn">Next Topic</button></a>
+    </div>
+
+    <!-- PANEL 1: OVERVIEW -->
+    <div class="tab-pane active-pane" id="summary-pane">
+        <div class="info-box" style="background:#0a2a44; color:white; border-left-color:#ffb347;">
+            <i class="fas fa-flag-checkered" style="margin-right: 10px;"></i> 
+            <strong>What is NIST AI RMF?</strong> A voluntary framework developed by the U.S. National Institute of Standards and Technology to help organizations manage AI risks and promote trustworthy AI.
+        </div>
+
+        <h3 style="color:#0a2a44; margin-top: 1.5rem;"><i class="fas fa-history"></i> NIST History & Framework Launch</h3>
+        
+        <div class="nist-history">
+            <i class="fas fa-building" style="color: #ffb347; margin-right: 8px;"></i>
+            <strong>NIST (National Institute of Standards and Technology)</strong> was founded on <strong>March 3, 1901</strong> as the National Bureau of Standards (NBS) — one of the oldest physical science laboratories in the United States. It was renamed to NIST in 1988.
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-year">March 3, 1901</div>
+                <div style="font-size: 0.8rem; color:#475569;"><strong>NIST Founded</strong><br>As National Bureau of Standards (NBS)</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">1988</div>
+                <div style="font-size: 0.8rem; color:#475569;">Renamed to NIST</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">2019</div>
+                <div style="font-size: 0.8rem; color:#475569;">AI RMF Development Begins</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">March 2022</div>
+                <div style="font-size: 0.8rem; color:#475569;">First Public Draft Released</div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-year">January 2023</div>
+                <div style="font-size: 0.8rem; color:#475569;"><strong>AI RMF Version 1.0 Launched</strong></div>
+            </div>
+        </div>
+
+        <div class="info-box info-gold">
+            <i class="fas fa-users"></i> <strong>Designed For:</strong>
+            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                <li><strong>AI Developers & Engineers</strong> — Technical guidance for building trustworthy AI</li>
+                <li><strong>Business Leaders & Executives</strong> — Governance structures and accountability frameworks</li>
+                <li><strong>Risk Managers & Compliance Officers</strong> — Tools to identify, measure, and manage AI risks</li>
+                <li><strong>Regulators & Policymakers</strong> — Common language for AI governance</li>
+                <li><strong>All Organizations</strong> — Scalable from startups to enterprises across all sectors</li>
+            </ul>
+        </div>
+
+        <h3 style="color:#0a2a44; margin-top: 1rem;"><i class="fas fa-star"></i> Three Key Characteristics</h3>
+        <div class="characteristics-grid">
+            <div class="characteristic"><i class="fas fa-hand-peace"></i> Voluntary — Not legally mandated</div>
+            <div class="characteristic"><i class="fas fa-chart-line"></i> Risk-Based — Focus on severity and likelihood</div>
+            <div class="characteristic"><i class="fas fa-sync-alt"></i> Iterative — Continuous loop, not one-time checklist</div>
+        </div>
+
+        <div class="info-box">
+            <i class="fas fa-check-circle"></i> <strong>Seven Characteristics of Trustworthy AI:</strong>
+            <div class="characteristics-grid" style="margin-top: 0.8rem;">
+                <div class="characteristic">Valid & Reliable</div>
+                <div class="characteristic">Safe</div>
+                <div class="characteristic">Secure & Resilient</div>
+                <div class="characteristic">Accountable & Transparent</div>
+                <div class="characteristic">Explainable & Interpretable</div>
+                <div class="characteristic">Privacy-Enhanced</div>
+                <div class="characteristic">Fair with Harmful Bias Managed</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PANEL 2: THE 4 FUNCTIONS -->
+    <div class="tab-pane" id="functions-pane">
+        <h3 style="color:#0a2a44; margin-bottom: 1rem;"><i class="fas fa-diagram-project"></i> The Four Core Functions of NIST AI RMF</h3>
+        <div class="framework-grid">
+            <div class="framework-card">
+                <div class="framework-icon"><i class="fas fa-gavel"></i></div>
+                <h3>GOVERN</h3>
+                <p><strong>"Set the Rules"</strong><br>Establish organizational governance structures, policies, and accountability for AI risk management. Define roles, responsibilities, and risk appetite. Ensure leadership oversight and compliance frameworks.</p>
+                <p style="margin-top: 0.5rem; font-style: italic; color:#ffb347;">Who is accountable? What are the rules?</p>
+            </div>
+            <div class="framework-card">
+                <div class="framework-icon"><i class="fas fa-map"></i></div>
+                <h3>MAP</h3>
+                <p><strong>"Know Your Risks"</strong><br>Understand the context, stakeholders, and potential risks. Identify AI system scope, data sources, intended use, and possible harms. Document assumptions and establish risk tolerance.</p>
+                <p style="margin-top: 0.5rem; font-style: italic; color:#ffb347;">What could go wrong? Who is affected?</p>
+            </div>
+            <div class="framework-card">
+                <div class="framework-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>MEASURE</h3>
+                <p><strong>"Quantify Them"</strong><br>Assess, analyze, and track AI risks using quantitative and qualitative methods. Test for bias, accuracy, security, and performance. Establish metrics and monitoring systems.</p>
+                <p style="margin-top: 0.5rem; font-style: italic; color:#ffb347;">How much risk? How to track it?</p>
+            </div>
+            <div class="framework-card">
+                <div class="framework-icon"><i class="fas fa-tools"></i></div>
+                <h3>MANAGE</h3>
+                <p><strong>"Control Them"</strong><br>Implement controls, mitigation strategies, and incident response. Continuously monitor, update, and improve. Document decisions and maintain audit trails.</p>
+                <p style="margin-top: 0.5rem; font-style: italic; color:#ffb347;">How to fix it? How to respond?</p>
+            </div>
+        </div>
+
+        <div class="info-box info-gold">
+            <i class="fas fa-sync-alt"></i> <strong>Iterative Lifecycle:</strong> The functions are not linear. They form a continuous loop—GOVERN enables MAP, which feeds MEASURE, which informs MANAGE, which loops back to refine GOVERN.
+        </div>
+
+        <!-- Which Function Companies Struggle With Most -->
+        <div class="info-box info-danger">
+            <i class="fas fa-skull-crosswalk"></i> <strong>Which Function Do Companies Struggle With Most and Why?</strong>
+            <p style="margin-top: 0.8rem;"><strong>GOVERN — Setting the Rules</strong></p>
+            <p>Most organizations struggle with <strong>GOVERN</strong> because:</p>
+            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                <li><strong>Unclear Accountability:</strong> No one wants to be personally responsible for AI outcomes. Organizations diffuse responsibility across teams, leaving no clear owner.</li>
+                <li><strong>No Defined Risk Appetite:</strong> Leaders haven't decided what constitutes acceptable AI risk. Without thresholds, teams don't know when to stop or intervene.</li>
+                <li><strong>Organizational Silos:</strong> Technical teams build AI; legal, compliance, and business teams are often excluded until problems emerge.</li>
+                <li><strong>Leadership Ambiguity:</strong> Boards and executives treat AI as a technical matter rather than a governance imperative. No one at the top owns AI risk.</li>
+                <li><strong>Cultural Resistance:</strong> "Move fast" cultures resist governance as slowing innovation. Without leadership mandate, governance is deprioritized.</li>
+            </ul>
+            <p style="margin-top: 0.8rem;"><strong>Why This Matters:</strong> Without GOVERN, the other functions (MAP, MEASURE, MANAGE) cannot operate effectively. If no one is accountable, no one ensures risks are mapped, measured, or managed. Governance is the foundation—without it, the entire framework collapses.</p>
+        </div>
+    </div>
+
+    <!-- PANEL 3: 5 LONG QUESTIONS + ANSWERS -->
+    <div class="tab-pane" id="longqa-pane">
+        <!-- Q1 -->
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-calendar-alt"></i> 1. When was NIST founded? When was the AI RMF launched?</div>
+            <div class="qa-answer"><strong>Answer:</strong> NIST (National Institute of Standards and Technology) was founded on <strong>March 3, 1901</strong> as the National Bureau of Standards (NBS). It was renamed to NIST in 1988. The AI Risk Management Framework (AI RMF) Version 1.0 was launched in <strong>January 2023</strong> after development beginning in 2019 and a public draft released in March 2022.</div>
+        </div>
+        <!-- Q2 -->
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-users"></i> 2. Who is NIST AI RMF designed for? Why is it described as voluntary, risk-based, and iterative?</div>
+            <div class="qa-answer"><strong>Answer:</strong> Designed for AI developers, business leaders, risk managers, regulators, and organizations of all sizes across all sectors.<br><br>
+            <strong>Voluntary:</strong> Not legally mandated; organizations choose to adopt it as a best practice.<br>
+            <strong>Risk-based:</strong> Focuses on severity and likelihood of harms rather than prescriptive rules.<br>
+            <strong>Iterative:</strong> Risk management is a continuous cycle, not a one-time checklist. The four functions loop continuously throughout the AI lifecycle.</div>
+        </div>
+        <!-- Q3 -->
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-diagram-project"></i> 3. Explain the four core functions of NIST AI RMF: GOVERN, MAP, MEASURE, MANAGE.</div>
+            <div class="qa-answer"><strong>Answer:</strong><br><br>
+            <strong>GOVERN — "Set the Rules":</strong> Establish organizational governance structures, policies, accountability, and risk appetite. Define roles and ensure leadership oversight.<br><br>
+            <strong>MAP — "Know Your Risks":</strong> Understand context, stakeholders, and potential risks. Identify AI system scope, data sources, and possible harms.<br><br>
+            <strong>MEASURE — "Quantify Them":</strong> Assess, analyze, and track AI risks using quantitative methods. Test for bias, accuracy, security, and performance.<br><br>
+            <strong>MANAGE — "Control Them":</strong> Implement controls, mitigation strategies, and incident response. Continuously monitor and maintain audit trails.</div>
+        </div>
+        <!-- Q4 -->
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-exclamation-triangle"></i> 4. Which NIST AI RMF function do companies struggle with most? Why?</div>
+            <div class="qa-answer"><strong>Answer:</strong> Most organizations struggle with <strong>GOVERN</strong> because:<br><br>
+            • <strong>Unclear accountability:</strong> No one wants to be personally responsible for AI outcomes.<br>
+            • <strong>No defined risk appetite:</strong> Leaders haven't decided acceptable risk thresholds.<br>
+            • <strong>Organizational silos:</strong> Technical teams operate separately from legal, compliance, and business.<br>
+            • <strong>Leadership ambiguity:</strong> Boards treat AI as technical rather than governance imperative.<br>
+            • <strong>Cultural resistance:</strong> "Move fast" cultures resist governance as slowing innovation.<br><br>
+            <strong>Why this matters:</strong> Without GOVERN, the other functions cannot operate effectively. If no one is accountable, no one ensures risks are mapped, measured, or managed. Governance is the foundation.</div>
+        </div>
+        <!-- Q5 -->
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-star"></i> 5. What are the seven characteristics of trustworthy AI according to NIST?</div>
+            <div class="qa-answer"><strong>Answer:</strong> NIST defines seven characteristics of trustworthy AI:<br><br>
+            1. <strong>Valid & Reliable:</strong> Performs consistently as intended<br>
+            2. <strong>Safe:</strong> Minimizes harm to humans and society<br>
+            3. <strong>Secure & Resilient:</strong> Protected from attacks and failures<br>
+            4. <strong>Accountable & Transparent:</strong> Clear ownership and visibility into operations<br>
+            5. <strong>Explainable & Interpretable:</strong> Decisions can be understood by humans<br>
+            6. <strong>Privacy-Enhanced:</strong> Protects personal data<br>
+            7. <strong>Fair with Harmful Bias Managed:</strong> Treats all groups equitably<br><br>
+            Organizations should embed these characteristics throughout the AI lifecycle using the four functions.</div>
+        </div>
+    </div>
+
+    <!-- PANEL 4: 5 MCQs -->
+    <div class="tab-pane" id="mcq-pane">
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 1. When was NIST (as an institution) founded?</div>
+            <div class="mcq-options">A) January 2023<br>B) March 3, 1901<br>C) 1988<br>D) March 2022</div>
+            <div class="mcq-answer">✅ <strong>Answer: B</strong> (March 3, 1901 — as the National Bureau of Standards)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 2. When was NIST AI RMF Version 1.0 launched?</div>
+            <div class="mcq-options">A) March 3, 1901<br>B) 1988<br>C) March 2022<br>D) January 2023</div>
+            <div class="mcq-answer">✅ <strong>Answer: D</strong> (January 2023)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 3. Which NIST AI RMF function is described as "Set the Rules"?</div>
+            <div class="mcq-options">A) MAP<br>B) MEASURE<br>C) GOVERN<br>D) MANAGE</div>
+            <div class="mcq-answer">✅ <strong>Answer: C</strong> (GOVERN — establishes governance structures, accountability, and risk appetite)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 4. Which function do most companies struggle with most according to the analysis?</div>
+            <div class="mcq-options">A) MAP (know your risks)<br>B) MEASURE (quantify them)<br>C) GOVERN (set the rules)<br>D) MANAGE (control them)</div>
+            <div class="mcq-answer">✅ <strong>Answer: C</strong> (GOVERN — due to unclear accountability, no defined risk appetite, silos, and leadership ambiguity)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 5. What does it mean that NIST AI RMF is "iterative"?</div>
+            <div class="mcq-options">A) It's a one-time checklist<br>B) It must be repeated annually<br>C) Risk management is a continuous loop, not one-time<br>D) It only applies to iterative software development</div>
+            <div class="mcq-answer">✅ <strong>Answer: C</strong> (Risk management is a continuous loop—the four functions repeat throughout the AI lifecycle)</div>
+        </div>
+    </div>
+
+    <!-- PANEL 5: QUICK REVISION -->
+    <div class="tab-pane" id="revision-pane">
+        <div class="revision-grid">
+            <div class="revision-card"><i class="fas fa-building"></i> <strong>NIST Founded</strong><br>March 3, 1901 (as NBS)</div>
+            <div class="revision-card"><i class="fas fa-calendar-alt"></i> <strong>AI RMF Launch</strong><br>January 2023</div>
+            <div class="revision-card"><i class="fas fa-hand-peace"></i> <strong>Voluntary</strong><br>Not legally mandated; best practice</div>
+            <div class="revision-card"><i class="fas fa-chart-line"></i> <strong>Risk-Based</strong><br>Focus on severity and likelihood</div>
+            <div class="revision-card"><i class="fas fa-sync-alt"></i> <strong>Iterative</strong><br>Continuous loop, not one-time</div>
+            <div class="revision-card"><i class="fas fa-gavel"></i> <strong>GOVERN</strong><br>"Set the Rules" — accountability, risk appetite</div>
+            <div class="revision-card"><i class="fas fa-map"></i> <strong>MAP</strong><br>"Know Your Risks" — context, stakeholders, harms</div>
+            <div class="revision-card"><i class="fas fa-chart-line"></i> <strong>MEASURE</strong><br>"Quantify Them" — test bias, accuracy, performance</div>
+            <div class="revision-card"><i class="fas fa-tools"></i> <strong>MANAGE</strong><br>"Control Them" — controls, monitoring, incident response</div>
+        </div>
+        <hr>
+        <div class="info-box info-danger">
+            <i class="fas fa-exclamation-triangle"></i> <strong>Most Struggled Function: GOVERN</strong>
+            <p style="margin-top: 0.5rem;">Why? Unclear accountability, no defined risk appetite, organizational silos, leadership treating AI as technical rather than governance imperative.</p>
+        </div>
+        <div class="info-box info-gold">
+            <i class="fas fa-lightbulb"></i> <strong>Exam Tip:</strong> Remember NIST was founded in 1901 (over 120 years of standards history). The AI RMF launched in 2023. The four functions: GOVERN → MAP → MEASURE → MANAGE. Without GOVERN, the others fail.
+        </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="nav-footer">
+        <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i> Previous</button>
+        <div class="page-indicator" id="pageIndicator">Overview (1/5)</div>
+        <button class="nav-btn" id="nextBtn">Next <i class="fas fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<script>
+    const tabs = [
+        { id: 'summary', label: 'Overview' },
+        { id: 'functions', label: '4 Functions' },
+        { id: 'longqa', label: '5 Long Q&A' },
+        { id: 'mcq', label: '5 MCQs' },
+        { id: 'revision', label: 'Quick Revision' }
+    ];
+    
+    let currentIndex = 0;
+
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const panes = document.querySelectorAll('.tab-pane');
+
+    function activateTab(index) {
+        tabBtns.forEach((btn, i) => {
+            if (i === index) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        panes.forEach((pane, i) => {
+            if (i === index) pane.classList.add('active-pane');
+            else pane.classList.remove('active-pane');
+        });
+        currentIndex = index;
+        const indicator = document.getElementById('pageIndicator');
+        if (indicator) {
+            indicator.innerText = `${tabs[currentIndex].label} (${currentIndex+1}/${tabs.length})`;
+        }
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (prevBtn) prevBtn.disabled = (currentIndex === 0);
+        if (nextBtn) nextBtn.disabled = (currentIndex === tabs.length-1);
+    }
+
+    tabBtns.forEach((btn, idx) => {
+        btn.addEventListener('click', () => activateTab(idx));
+    });
+
+    document.getElementById('prevBtn')?.addEventListener('click', () => {
+        if (currentIndex > 0) activateTab(currentIndex - 1);
+    });
+    document.getElementById('nextBtn')?.addEventListener('click', () => {
+        if (currentIndex < tabs.length - 1) activateTab(currentIndex + 1);
+    });
+
+    // Map data-tab to index
+    const dataTabMap = { summary: 0, functions: 1, longqa: 2, mcq: 3, revision: 4 };
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        const tabId = btn.getAttribute('data-tab');
+        const idx = dataTabMap[tabId];
+        if (idx !== undefined) {
+            btn.onclick = () => activateTab(idx);
+        }
+    });
+
+    activateTab(0);
+</script>
+</body>
+</html>

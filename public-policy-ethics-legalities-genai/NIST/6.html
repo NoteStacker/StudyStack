@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Risk Management | Translating NIST RMF to Business Language</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4fa 0%, #e9eef4 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .notes-container {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .slide-header {
+            background: #0a2a44;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 3px solid #ffb347;
+        }
+
+        .slide-badge {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #ffb347;
+            letter-spacing: 0.5px;
+        }
+
+        .slide-title {
+            color: white;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .slide-title i {
+            color: #ffb347;
+            margin-right: 0.6rem;
+        }
+
+        .tab-nav {
+            display: flex;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 2rem;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.6rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .tab-btn i {
+            font-size: 1rem;
+        }
+
+        .tab-btn.active {
+            color: #0a2a44;
+            border-bottom-color: #ffb347;
+            background: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: #0a2a44;
+            background: #f1f5f9;
+        }
+
+        .tab-pane {
+            display: none;
+            padding: 2rem 2rem 2rem 2rem;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .tab-pane.active-pane {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* One-Liner Cards */
+        .one-liner-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.2rem;
+            margin: 1.5rem 0;
+        }
+
+        .one-liner-card {
+            background: #0a2a44;
+            border-radius: 1rem;
+            padding: 1.2rem;
+            text-align: center;
+            color: white;
+            transition: transform 0.2s;
+        }
+
+        .one-liner-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .one-liner-card i {
+            font-size: 2rem;
+            color: #ffb347;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .one-liner-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .one-liner-card .function {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            margin-top: 0.5rem;
+        }
+
+        /* Framework Cards */
+        .framework-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .framework-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .framework-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            border-color: #ffb347;
+        }
+
+        .framework-icon {
+            width: 55px;
+            height: 55px;
+            background: #fef9e6;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: #ffb347;
+            font-size: 1.6rem;
+        }
+
+        .framework-card h3 {
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
+            color: #0a2a44;
+        }
+
+        .framework-card .one-liner {
+            font-weight: 700;
+            color: #ffb347;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        .framework-card p {
+            color: #475569;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .info-box {
+            background: #eef2ff;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            border-left: 4px solid #0a2a44;
+            margin: 1.5rem 0;
+        }
+
+        .info-gold {
+            background: #fef9e6;
+            border-left-color: #ffb347;
+        }
+
+        .info-danger {
+            background: #fee2e2;
+            border-left-color: #dc2626;
+        }
+
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: #f8fafc;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .metrics-table th, .metrics-table td {
+            padding: 0.9rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .metrics-table th {
+            background: #eef2ff;
+            color: #0a2a44;
+            font-weight: 600;
+        }
+
+        .manage-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .manage-item {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border-left: 3px solid #ffb347;
+        }
+
+        .manage-item h4 {
+            color: #0a2a44;
+            margin-bottom: 0.5rem;
+        }
+
+        .qa-block {
+            margin-bottom: 2rem;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.2rem;
+            overflow: hidden;
+        }
+
+        .qa-question {
+            background: #f1f5f9;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            color: #0a2a44;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .qa-question i {
+            color: #ffb347;
+            font-size: 1.2rem;
+        }
+
+        .qa-answer {
+            padding: 1.2rem 1.5rem;
+            color: #334155;
+            line-height: 1.5;
+            background: white;
+        }
+
+        .mcq-item {
+            background: #f9fafb;
+            margin-bottom: 1rem;
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .mcq-question {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #0f172a;
+        }
+
+        .mcq-options {
+            padding-left: 1rem;
+            margin-bottom: 0.5rem;
+            color: #475569;
+        }
+
+        .mcq-answer {
+            margin-top: 0.5rem;
+            font-weight: 600;
+            color: #2b6e3c;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 0.6rem;
+        }
+
+        .revision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .revision-card {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 1rem;
+            border-left: 4px solid #ffb347;
+        }
+
+        .nav-footer {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 0.6rem 1.4rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1e293b;
+        }
+
+        .nav-btn:hover {
+            background: #0a2a44;
+            color: white;
+            border-color: #0a2a44;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #e2e8f0;
+            color: #64748b;
+        }
+
+        .page-indicator {
+            font-size: 0.85rem;
+            background: #e9eef3;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            color: #0a2a44;
+            font-weight: 500;
+        }
+
+        hr {
+            margin: 1rem 0;
+        }
+
+        @media (max-width: 680px) {
+            .tab-btn span:not(i) {
+                display: none;
+            }
+            .tab-btn i {
+                font-size: 1.2rem;
+                margin: 0;
+            }
+            .tab-nav {
+                padding: 0 1rem;
+            }
+            .tab-pane {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="notes-container">
+    <!-- Header -->
+    <div class="slide-header">
+        <div class="slide-title">
+            <i class="fas fa-language"></i> Slide 7 · Translating NIST RMF to Business Language
+        </div>
+        <div class="slide-badge">
+            <i class="fas fa-chalkboard"></i> GOVERN | MAP | MEASURE | MANAGE
+        </div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="tab-nav" id="tabNav">
+        <button class="tab-btn active" data-tab="summary"><i class="fas fa-info-circle"></i><span> Overview</span></button>
+        <button class="tab-btn" data-tab="functions"><i class="fas fa-diagram-project"></i><span> 4 Functions</span></button>
+        <button class="tab-btn" data-tab="longqa"><i class="fas fa-pen-ruler"></i><span> 5 Long Q&A</span></button>
+        <button class="tab-btn" data-tab="mcq"><i class="fas fa-check-double"></i><span> 5 MCQs</span></button>
+        <button class="tab-btn" data-tab="revision"><i class="fas fa-memory"></i><span> Quick Revision</span></button>
+	<a href="7.html"><button class="tab-btn">Next Topic</button></a>
+    </div>
+
+    <!-- PANEL 1: OVERVIEW -->
+    <div class="tab-pane active-pane" id="summary-pane">
+        <div class="info-box" style="background:#0a2a44; color:white; border-left-color:#ffb347;">
+            <i class="fas fa-quote-left" style="margin-right: 10px;"></i> 
+            <strong>Connecting technical risk functions to executive responsibilities.</strong> This slide maps NIST AI RMF functions to business language, enabling leaders to understand and act on AI risk.
+        </div>
+
+        <h3 style="color:#0a2a44; margin-top: 1.5rem;"><i class="fas fa-question-circle"></i> The One-Liner Summary</h3>
+        <div class="one-liner-grid">
+            <div class="one-liner-card">
+                <i class="fas fa-gavel"></i>
+                <h3>Who owns it?</h3>
+                <div class="function">GOVERN — Accountability & Ownership</div>
+            </div>
+            <div class="one-liner-card">
+                <i class="fas fa-map"></i>
+                <h3>What can go wrong?</h3>
+                <div class="function">MAP — Context & Risk Identification</div>
+            </div>
+            <div class="one-liner-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>How bad is the risk?</h3>
+                <div class="function">MEASURE — KPIs & Validation Metrics</div>
+            </div>
+            <div class="one-liner-card">
+                <i class="fas fa-tools"></i>
+                <h3>What do we do about it?</h3>
+                <div class="function">MANAGE — Decision & Action Plans</div>
+            </div>
+        </div>
+
+        <div class="info-box info-gold">
+            <i class="fas fa-chart-line"></i> <strong>The Measurement Imperative:</strong>
+            <p style="margin-top: 0.5rem;">"What gets measured gets managed. What is not measured cannot be managed and becomes invisible risk."</p>
+            <p style="margin-top: 0.5rem; font-weight: 600;">"If you don't measure bias, you are accepting bias."</p>
+        </div>
+
+        <h3 style="color:#0a2a44; margin-top: 1rem;"><i class="fas fa-exchange-alt"></i> NIST Functions to Business Language</h3>
+        <table class="metrics-table">
+            <thead>
+                <tr><th>NIST Function</th><th>Business Translation</th><th>One-Liner</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>GOVERN</strong></td><td>Accountability & Ownership</td><td>Who owns it?</td></tr>
+                <tr><td><strong>MAP</strong></td><td>Context & Risk Identification</td><td>What can go wrong?</td></tr>
+                <tr><td><strong>MEASURE</strong></td><td>KPIs & Validation Metrics</td><td>How bad is the risk?</td></tr>
+                <tr><td><strong>MANAGE</strong></td><td>Decision & Action Plans</td><td>What do we do about it?</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PANEL 2: THE 4 FUNCTIONS -->
+    <div class="tab-pane" id="functions-pane">
+        <div class="framework-grid">
+            <div class="framework-card">
+                <div class="framework-icon"><i class="fas fa-gavel"></i></div>
+                <h3>GOVERN</h3>
+                <div class="one-liner">"Who owns it?"</div>
+                <p><strong>Business Translation:</strong> Accountability and Ownership</p>
+                <p>Who is accountable? Who signs off before deployment? Who is responsible when things go wrong?</p>
+                <p style="margin-top: 0.5rem;"><strong>Executive Action:</strong> Appoint named owners; require executive sign-off; establish governance councils.</p>
+            </div>
+            <div class="framework-card">
+                <div class="framework-icon"><i class="fas fa-map"></i></div>
+                <h3>MAP</h3>
+                <div class="one-liner">"What can go wrong?"</div>
+                <p><strong>Business Translation:</strong> Context and Risk Identification</p>
+                <p>What is the AI intended to do? What could go wrong? Who will be affected? What are the assumptions?</p>
+                <p style="margin-top: 0.5rem;"><strong>Executive Action:</strong> Demand risk assessments; identify stakeholders; maintain risk register.</p>
+            </div>
+            <div class="framework-card">
+                <div class="framework-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>MEASURE</h3>
+                <div class="one-liner">"How bad is the risk?"</div>
+                <p><strong>Business Translation:</strong> KPIs and Validation Metrics</p>
+                <p>How do we track performance? What metrics define success? How do we detect bias or degradation?</p>
+                <p style="margin-top: 0.5rem;"><strong>Executive Action:</strong> Define KPIs; require bias, accuracy, reliability reporting; set thresholds.</p>
+            </div>
+            <div class="framework-card">
+                <div class="framework-icon"><i class="fas fa-tools"></i></div>
+                <h3>MANAGE</h3>
+                <div class="one-liner">"What do we do about it?"</div>
+                <p><strong>Business Translation:</strong> Decision and Action Plans</p>
+                <p>What do we do when it fails? How do we respond? What controls are in place?</p>
+                <p style="margin-top: 0.5rem;"><strong>Executive Action:</strong> Prioritize risks; implement controls; monitor continuously; establish incident response.</p>
+            </div>
+        </div>
+
+        <h3 style="color:#0a2a44; margin-top: 1rem;"><i class="fas fa-chart-simple"></i> Key KPIs Executives Must Demand</h3>
+        <table class="metrics-table">
+            <thead>
+                <tr><th>Metric Category</th><th>What to Measure</th><th>Why It Matters</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Accuracy Metrics</strong></td><td>Precision, recall, F1-score, AUC-ROC, error rates</td><td>How often is the model correct?</td></tr>
+                <tr><td><strong>Bias Indicators</strong></td><td>Disparate impact ratio, equal opportunity difference, demographic parity</td><td>Is the model fair across demographic groups?</td></tr>
+                <tr><td><strong>Reliability Thresholds</strong></td><td>Confidence intervals, calibration scores, stability over time</td><td>How confident can we be in outputs?</td></tr>
+                <tr><td><strong>Performance Drift</strong></td><td>Accuracy degradation, concept drift detection</td><td>When does the model start failing?</td></tr>
+                <tr><td><strong>Security Metrics</strong></td><td>Adversarial robustness, vulnerability scans</td><td>Is the model secure from attacks?</td></tr>
+            </tbody>
+        </table>
+
+        <h3 style="color:#0a2a44; margin-top: 1rem;"><i class="fas fa-clipboard-list"></i> The Four Components of MANAGE</h3>
+        <div class="manage-grid">
+            <div class="manage-item"><h4>Risk Prioritization</h4><p>Rank risks by severity and likelihood; allocate resources accordingly</p></div>
+            <div class="manage-item"><h4>Control Implementation</h4><p>Technical and process safeguards (human-in-the-loop, input validation)</p></div>
+            <div class="manage-item"><h4>Continuous Monitoring</h4><p>Real-time oversight; define escalation triggers; review regularly</p></div>
+            <div class="manage-item"><h4>Incident Response</h4><p>Pre-planned protocols: rollback, kill-switches, communication plans</p></div>
+        </div>
+
+        <div class="info-box info-danger">
+            <i class="fas fa-exclamation-triangle"></i> <strong>The Measurement Imperative:</strong>
+            <p style="margin-top: 0.5rem;">"What gets measured gets managed. What is not measured cannot be managed and becomes invisible risk."</p>
+            <p style="margin-top: 0.5rem;"><strong>"If you don't measure bias, you are accepting bias."</strong></p>
+            <p style="margin-top: 0.5rem;">Without measurement, risks become invisible, unmanaged, and ultimately lead to failures.</p>
+        </div>
+    </div>
+
+    <!-- PANEL 3: 5 LONG QUESTIONS + ANSWERS -->
+    <div class="tab-pane" id="longqa-pane">
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-quote-left"></i> 1. Explain the four NIST AI RMF functions using the one-liner framework. What executive question does each answer?</div>
+            <div class="qa-answer"><strong>Answer:</strong><br>
+            <strong>GOVERN:</strong> "Who owns it?" — Accountability and Ownership<br>
+            <strong>MAP:</strong> "What can go wrong?" — Context and Risk Identification<br>
+            <strong>MEASURE:</strong> "How bad is the risk?" — KPIs and Validation Metrics<br>
+            <strong>MANAGE:</strong> "What do we do about it?" — Decision and Action Plans<br>
+            This one-liner framework enables leaders to quickly grasp and apply NIST AI RMF functions.</div>
+        </div>
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-chart-line"></i> 2. What KPIs should executives demand under MEASURE? Why is measurement critical?</div>
+            <div class="qa-answer"><strong>Answer:</strong> Executives must demand:<br>
+            • <strong>Accuracy Metrics:</strong> Precision, recall, F1-score, error rates<br>
+            • <strong>Bias Indicators:</strong> Disparate impact ratio, equal opportunity difference<br>
+            • <strong>Reliability Thresholds:</strong> Confidence intervals, calibration scores<br>
+            • <strong>Performance Drift:</strong> Accuracy degradation, concept drift detection<br><br>
+            <strong>Why measurement is critical:</strong> "What gets measured gets managed. What is not measured cannot be managed and becomes invisible risk. If you don't measure bias, you are accepting bias."</div>
+        </div>
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-tasks"></i> 3. What are the four components of MANAGE? Describe each.</div>
+            <div class="qa-answer"><strong>Answer:</strong><br>
+            <strong>Risk Prioritization:</strong> Ranking risks by severity and likelihood; allocate resources where needed most.<br>
+            <strong>Control Implementation:</strong> Technical and process safeguards (human-in-the-loop, input validation).<br>
+            <strong>Continuous Monitoring:</strong> Real-time oversight; define escalation triggers; review regularly.<br>
+            <strong>Incident Response:</strong> Pre-planned protocols for failures: rollback procedures, kill-switches, communication plans.</div>
+        </div>
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-eye"></i> 4. Why is MAP (Context and Risk Identification) critical before deployment?</div>
+            <div class="qa-answer"><strong>Answer:</strong> MAP is critical because:<br>
+            • Leaders must understand what the AI is intended to do<br>
+            • Potential harms must be identified before they occur<br>
+            • Stakeholders affected by failures must be known<br>
+            • Assumptions and limitations must be documented<br><br>
+            <strong>If MAP is skipped:</strong> Risks go unidentified until crisis hits; organizations deploy without understanding harms; no risk register exists to guide measurement and management.</div>
+        </div>
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-gavel"></i> 5. Explain the statement: "What gets measured gets managed. If you don't measure bias, you are accepting bias."</div>
+            <div class="qa-answer"><strong>Answer:</strong> This principle means measurement is essential for accountability:<br>
+            • Without bias metrics, you cannot know if AI discriminates<br>
+            • Without accuracy metrics, you don't know when the model fails<br>
+            • Without drift detection, performance degradation goes unnoticed<br>
+            • Invisible risks become unmanaged risks that cause failures<br><br>
+            <strong>Application:</strong> Executives must demand measurement of bias, accuracy, and reliability. Lack of measurement does not absolve accountability—if you don't measure bias, you are implicitly accepting it.</div>
+        </div>
+    </div>
+
+    <!-- PANEL 4: 5 MCQs -->
+    <div class="tab-pane" id="mcq-pane">
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 1. What is the one-liner for the GOVERN function?</div>
+            <div class="mcq-options">A) What can go wrong?<br>B) How bad is the risk?<br>C) Who owns it?<br>D) What do we do about it?</div>
+            <div class="mcq-answer">✅ <strong>Answer: C</strong> (Who owns it?)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 2. Which metric category measures fairness across demographic groups?</div>
+            <div class="mcq-options">A) Accuracy Metrics<br>B) Bias Indicators<br>C) Reliability Thresholds<br>D) Performance Drift</div>
+            <div class="mcq-answer">✅ <strong>Answer: B</strong> (Bias Indicators — disparate impact ratio, equal opportunity difference)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 3. What does the statement "If you don't measure bias, you are accepting bias" mean?</div>
+            <div class="mcq-options">A) Bias is acceptable if not measured<br>B) Failure to measure bias means you have no visibility into discrimination, making you implicitly accountable<br>C) Bias measurement is optional<br>D) Only technical teams need to measure bias</div>
+            <div class="mcq-answer">✅ <strong>Answer: B</strong> (Failure to measure bias means you cannot know if discrimination exists; lack of knowledge does not absolve accountability)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 4. Which component of MANAGE involves ranking risks by severity and likelihood?</div>
+            <div class="mcq-options">A) Control Implementation<br>B) Continuous Monitoring<br>C) Risk Prioritization<br>D) Incident Response</div>
+            <div class="mcq-answer">✅ <strong>Answer: C</strong> (Risk Prioritization — allocating resources to highest-priority risks)</div>
+        </div>
+        <div class="mcq-item">
+            <div class="mcq-question"><i class="fas fa-circle-question"></i> 5. What is the one-liner for the MEASURE function?</div>
+            <div class="mcq-options">A) Who owns it?<br>B) What can go wrong?<br>C) How bad is the risk?<br>D) What do we do about it?</div>
+            <div class="mcq-answer">✅ <strong>Answer: C</strong> (How bad is the risk?)</div>
+        </div>
+    </div>
+
+    <!-- PANEL 5: QUICK REVISION -->
+    <div class="tab-pane" id="revision-pane">
+        <div class="revision-grid">
+            <div class="revision-card"><i class="fas fa-gavel"></i> <strong>GOVERN</strong><br>"Who owns it?"<br>Accountability & Ownership</div>
+            <div class="revision-card"><i class="fas fa-map"></i> <strong>MAP</strong><br>"What can go wrong?"<br>Context & Risk Identification</div>
+            <div class="revision-card"><i class="fas fa-chart-line"></i> <strong>MEASURE</strong><br>"How bad is the risk?"<br>KPIs & Validation Metrics</div>
+            <div class="revision-card"><i class="fas fa-tools"></i> <strong>MANAGE</strong><br>"What do we do about it?"<br>Decision & Action Plans</div>
+            <div class="revision-card"><i class="fas fa-chart-simple"></i> <strong>Key KPIs</strong><br>Accuracy, Bias, Reliability, Drift, Security</div>
+            <div class="revision-card"><i class="fas fa-clipboard-list"></i> <strong>MANAGE Components</strong><br>Prioritization, Controls, Monitoring, Incident Response</div>
+        </div>
+        <hr>
+        <div class="info-box info-gold">
+            <i class="fas fa-lightbulb"></i> <strong>Exam Tip:</strong> Remember the four one-liners: GOVERN = Who owns it? MAP = What can go wrong? MEASURE = How bad is the risk? MANAGE = What do we do about it?
+        </div>
+        <div class="info-box info-danger">
+            <i class="fas fa-chart-line"></i> <strong>The Measurement Imperative:</strong> "What gets measured gets managed. What is not measured becomes invisible risk. If you don't measure bias, you are accepting bias."
+        </div>
+    </div>
+
+    <!-- Navigation Footer -->
+    <div class="nav-footer">
+        <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i> Previous</button>
+        <div class="page-indicator" id="pageIndicator">Overview (1/5)</div>
+        <button class="nav-btn" id="nextBtn">Next <i class="fas fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<script>
+    const tabs = [
+        { id: 'summary', label: 'Overview' },
+        { id: 'functions', label: '4 Functions' },
+        { id: 'longqa', label: '5 Long Q&A' },
+        { id: 'mcq', label: '5 MCQs' },
+        { id: 'revision', label: 'Quick Revision' }
+    ];
+    
+    let currentIndex = 0;
+
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const panes = document.querySelectorAll('.tab-pane');
+
+    function activateTab(index) {
+        tabBtns.forEach((btn, i) => {
+            if (i === index) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        panes.forEach((pane, i) => {
+            if (i === index) pane.classList.add('active-pane');
+            else pane.classList.remove('active-pane');
+        });
+        currentIndex = index;
+        const indicator = document.getElementById('pageIndicator');
+        if (indicator) {
+            indicator.innerText = `${tabs[currentIndex].label} (${currentIndex+1}/${tabs.length})`;
+        }
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (prevBtn) prevBtn.disabled = (currentIndex === 0);
+        if (nextBtn) nextBtn.disabled = (currentIndex === tabs.length-1);
+    }
+
+    tabBtns.forEach((btn, idx) => {
+        btn.addEventListener('click', () => activateTab(idx));
+    });
+
+    document.getElementById('prevBtn')?.addEventListener('click', () => {
+        if (currentIndex > 0) activateTab(currentIndex - 1);
+    });
+    document.getElementById('nextBtn')?.addEventListener('click', () => {
+        if (currentIndex < tabs.length - 1) activateTab(currentIndex + 1);
+    });
+
+    const dataTabMap = { summary: 0, functions: 1, longqa: 2, mcq: 3, revision: 4 };
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+        const tabId = btn.getAttribute('data-tab');
+        const idx = dataTabMap[tabId];
+        if (idx !== undefined) {
+            btn.onclick = () => activateTab(idx);
+        }
+    });
+
+    activateTab(0);
+</script>
+</body>
+</html>

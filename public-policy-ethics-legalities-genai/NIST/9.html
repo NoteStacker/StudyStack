@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Risk Management | MEASURE: The Analytics Lens</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4fa 0%, #e9eef4 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .notes-container {
+            max-width: 1400px;
+            width: 100%;
+            background: white;
+            border-radius: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+        }
+
+        .slide-header {
+            background: #0a2a44;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            border-bottom: 3px solid #ffb347;
+        }
+
+        .slide-badge {
+            background: rgba(255, 255, 255, 0.12);
+            padding: 0.4rem 1rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #ffb347;
+            letter-spacing: 0.5px;
+        }
+
+        .slide-title {
+            color: white;
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .slide-title i {
+            color: #ffb347;
+            margin-right: 0.6rem;
+        }
+
+        .tab-nav {
+            display: flex;
+            background: #f8fafc;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 0 2rem;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: transparent;
+            border: none;
+            padding: 1rem 1.6rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #475569;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-bottom: 3px solid transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .tab-btn i {
+            font-size: 1rem;
+        }
+
+        .tab-btn.active {
+            color: #0a2a44;
+            border-bottom-color: #ffb347;
+            background: white;
+        }
+
+        .tab-btn:hover:not(.active) {
+            color: #0a2a44;
+            background: #f1f5f9;
+        }
+
+        .tab-pane {
+            display: none;
+            padding: 2rem 2rem 2rem 2rem;
+            animation: fadeIn 0.25s ease;
+        }
+
+        .tab-pane.active-pane {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px);}
+            to { opacity: 1; transform: translateY(0);}
+        }
+
+        /* Pillar Cards */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .pillar-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1);
+            border-color: #ffb347;
+        }
+
+        .pillar-icon {
+            width: 55px;
+            height: 55px;
+            background: #fef9e6;
+            border-radius: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            color: #ffb347;
+            font-size: 1.6rem;
+        }
+
+        .pillar-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #0a2a44;
+        }
+
+        .pillar-card .subtitle {
+            color: #ffb347;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+        }
+
+        .pillar-card p {
+            color: #475569;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+            background: #f8fafc;
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .metrics-table th, .metrics-table td {
+            padding: 0.9rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .metrics-table th {
+            background: #eef2ff;
+            color: #0a2a44;
+            font-weight: 600;
+        }
+
+        .info-box {
+            background: #eef2ff;
+            padding: 1rem 1.5rem;
+            border-radius: 1rem;
+            border-left: 4px solid #0a2a44;
+            margin: 1.5rem 0;
+        }
+
+        .info-gold {
+            background: #fef9e6;
+            border-left-color: #ffb347;
+        }
+
+        .info-danger {
+            background: #fee2e2;
+            border-left-color: #dc2626;
+        }
+
+        .info-blue {
+            background: #eef2ff;
+            border-left-color: #0a2a44;
+        }
+
+        .qa-block {
+            margin-bottom: 2rem;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1.2rem;
+            overflow: hidden;
+        }
+
+        .qa-question {
+            background: #f1f5f9;
+            padding: 1rem 1.5rem;
+            font-weight: 700;
+            color: #0a2a44;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .qa-question i {
+            color: #ffb347;
+            font-size: 1.2rem;
+        }
+
+        .qa-answer {
+            padding: 1.2rem 1.5rem;
+            color: #334155;
+            line-height: 1.5;
+            background: white;
+        }
+
+        .mcq-item {
+            background: #f9fafb;
+            margin-bottom: 1rem;
+            border-radius: 1rem;
+            padding: 1rem 1.2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .mcq-question {
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #0f172a;
+        }
+
+        .mcq-options {
+            padding-left: 1rem;
+            margin-bottom: 0.5rem;
+            color: #475569;
+        }
+
+        .mcq-answer {
+            margin-top: 0.5rem;
+            font-weight: 600;
+            color: #2b6e3c;
+            border-top: 1px dashed #cbd5e1;
+            padding-top: 0.6rem;
+        }
+
+        .revision-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .revision-card {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 1rem;
+            border-left: 4px solid #ffb347;
+        }
+
+        .nav-footer {
+            background: #f8fafc;
+            border-top: 1px solid #e2e8f0;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .nav-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            padding: 0.6rem 1.4rem;
+            border-radius: 2rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #1e293b;
+        }
+
+        .nav-btn:hover {
+            background: #0a2a44;
+            color: white;
+            border-color: #0a2a44;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background: #e2e8f0;
+            color: #64748b;
+        }
+
+        .page-indicator {
+            font-size: 0.85rem;
+            background: #e9eef3;
+            padding: 0.4rem 1rem;
+            border-radius: 2rem;
+            color: #0a2a44;
+            font-weight: 500;
+        }
+
+        hr {
+            margin: 1rem 0;
+        }
+
+        .security-threats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .threat-card {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.75rem;
+            border-left: 3px solid #ffb347;
+        }
+
+        @media (max-width: 680px) {
+            .tab-btn span:not(i) {
+                display: none;
+            }
+            .tab-btn i {
+                font-size: 1.2rem;
+                margin: 0;
+            }
+            .tab-nav {
+                padding: 0 1rem;
+            }
+            .tab-pane {
+                padding: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="notes-container">
+    <div class="slide-header">
+        <div class="slide-title">
+            <i class="fas fa-chart-line"></i> Slide 10 · MEASURE: The Analytics Lens
+        </div>
+        <div class="slide-badge">
+            <i class="fas fa-chart-simple"></i> NIST AI RMF | MEASURE | Bias | Accuracy | Security
+        </div>
+    </div>
+
+    <div class="tab-nav" id="tabNav">
+        <button class="tab-btn active" data-tab="summary"><i class="fas fa-info-circle"></i><span> Overview</span></button>
+        <button class="tab-btn" data-tab="pillars"><i class="fas fa-cubes"></i><span> 3 Pillars</span></button>
+        <button class="tab-btn" data-tab="security"><i class="fas fa-shield-haltered"></i><span> Security Threats</span></button>
+        <button class="tab-btn" data-tab="longqa"><i class="fas fa-pen-ruler"></i><span> 5 Long Q&A</span></button>
+        <button class="tab-btn" data-tab="mcq"><i class="fas fa-check-double"></i><span> 5 MCQs</span></button>
+        <button class="tab-btn" data-tab="revision"><i class="fas fa-memory"></i><span> Quick Revision</span></button>
+	<a href="10.html"><button class="tab-btn">Next Topic</button></a>
+    </div>
+
+    <!-- PANEL 1: OVERVIEW -->
+    <div class="tab-pane active-pane" id="summary-pane">
+        <div class="info-box" style="background:#0a2a44; color:white; border-left-color:#ffb347;">
+            <i class="fas fa-chart-line" style="margin-right: 10px;"></i> 
+            <strong>"What you don't measure, you can't manage."</strong> Measurement is the bridge between identifying risks and controlling them. Without continuous measurement, risks become invisible and unmanageable.
+        </div>
+
+        <div class="info-box info-gold" style="text-align: center; font-size: 1.3rem; font-weight: 700;">
+            <i class="fas fa-chart-line"></i> MEASURE One-Liner: <strong>"How bad is the risk?"</strong>
+        </div>
+
+        <h3 style="color:#0a2a44; margin-top: 1rem;"><i class="fas fa-cubes"></i> The Three Pillars of MEASURE</h3>
+        <div class="pillars-grid">
+            <div class="pillar-card">
+                <div class="pillar-icon"><i class="fas fa-balance-scale"></i></div>
+                <h3>Bias</h3>
+                <div class="subtitle">Fairness Across Demographic Groups</div>
+                <p>Measuring whether the model treats all groups equitably. Detecting disparate impact, proxy discrimination, and historical bias that becomes automated.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-icon"><i class="fas fa-chart-simple"></i></div>
+                <h3>Accuracy</h3>
+                <div class="subtitle">Model Performance & Reliability</div>
+                <p>Tracking precision, recall, F1-scores, and calibration under real-world conditions. High accuracy in testing does not guarantee high reliability in reality.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-icon"><i class="fas fa-shield-haltered"></i></div>
+                <h3>Security</h3>
+                <div class="subtitle">Adversarial Robustness & Data Integrity</div>
+                <p>Testing resistance to evasion attacks (fooling the model), poisoning attacks (corrupting training data), and model extraction (stealing the model).</p>
+            </div>
+        </div>
+
+        <div class="info-box info-blue">
+            <i class="fas fa-chart-line"></i> <strong>Continuous Measurement & Monitoring</strong>
+            <p style="margin-top: 0.5rem;">AI systems evolve. Data changes, user behavior changes, environment changes. Without continuous measurement, degradation goes unnoticed until failure occurs.</p>
+        </div>
+    </div>
+
+    <!-- PANEL 2: 3 PILLARS DETAILED -->
+    <div class="tab-pane" id="pillars-pane">
+        <h3 style="color:#0a2a44; margin-bottom: 1rem;"><i class="fas fa-cubes"></i> The Three Pillars of MEASURE</h3>
+        
+        <div class="pillars-grid">
+            <div class="pillar-card" style="border-top: 4px solid #ffb347;">
+                <h3><i class="fas fa-balance-scale"></i> 1. Bias — Fairness Across Demographic Groups</h3>
+                <p><strong>What it measures:</strong> Fairness across demographic groups; disparate treatment or impact; whether the model disadvantages protected groups.</p>
+                <p style="margin-top: 0.5rem;"><strong>Key Metrics:</strong> Disparate Impact Ratio, Equal Opportunity Difference, Demographic Parity, Calibration by Group.</p>
+                <p style="margin-top: 0.5rem;"><strong>Why it matters:</strong> Bias is invisible without active measurement. Historical discrimination becomes automated. Regulators demand fairness metrics.</p>
+                <p style="margin-top: 0.5rem; font-style: italic; color:#ffb347;">Example: Hiring AI with disparate impact ratio of 0.6 (women hired at 60% rate of men) triggers regulatory action.</p>
+            </div>
+            <div class="pillar-card" style="border-top: 4px solid #ffb347;">
+                <h3><i class="fas fa-chart-simple"></i> 2. Accuracy — Model Performance & Reliability</h3>
+                <p><strong>What it measures:</strong> How well the model performs; reliability under real-world conditions; tracking precision, recall, F1-scores, and calibration.</p>
+                <p style="margin-top: 0.5rem;"><strong>Key Metrics:</strong> Precision, Recall, F1-Score, Calibration, Error Rate, Confusion Matrix.</p>
+                <p style="margin-top: 0.5rem;"><strong>Critical Insight:</strong> A model that performs well in testing may behave very differently in production. <strong>High accuracy in testing does not guarantee high reliability in reality.</strong></p>
+                <p style="margin-top: 0.5rem; font-style: italic; color:#ffb347;">Example: Fraud detection model with 99% test accuracy fails to catch new fraud patterns in production.</p>
+            </div>
+            <div class="pillar-card" style="border-top: 4px solid #ffb347;">
+                <h3><i class="fas fa-shield-haltered"></i> 3. Security — Adversarial Robustness & Data Integrity</h3>
+                <p><strong>What it measures:</strong> Resistance to attacks and manipulation; protection of model and data integrity.</p>
+                <p style="margin-top: 0.5rem;"><strong>Three Types of Threats:</strong> Evasion Attacks (fooling during runtime), Poisoning Attacks (corrupting training data), Model Extraction (stealing the model).</p>
+                <p style="margin-top: 0.5rem;"><strong>Why it matters:</strong> AI systems are vulnerable to attacks traditional security doesn't address.</p>
+                <p style="margin-top: 0.5rem; font-style: italic; color:#ffb347;">Example: Facial recognition tricked by a printed sticker into identifying anyone as a specific person.</p>
+            </div>
+        </div>
+
+        <div class="info-box info-danger">
+            <i class="fas fa-exclamation-triangle"></i> <strong>Which Pillar Do Companies Underestimate the Most?</strong>
+            <p style="margin-top: 0.5rem;"><strong>Security Metrics and Continuous Monitoring</strong> — Organizations treat AI security like traditional cybersecurity; they don't test for evasion, poisoning, or extraction attacks. They test models once at deployment, then assume they continue working without monitoring for drift.</p>
+        </div>
+    </div>
+
+    <!-- PANEL 3: SECURITY THREATS DETAILED -->
+    <div class="tab-pane" id="security-pane">
+        <h3 style="color:#0a2a44; margin-bottom: 1rem;"><i class="fas fa-shield-haltered"></i> Three Types of Security Threats</h3>
+        
+        <div class="security-threats">
+            <div class="threat-card">
+                <i class="fas fa-eye-slash" style="color:#ffb347; font-size: 1.5rem;"></i>
+                <h3 style="margin: 0.5rem 0;">Evasion Attacks</h3>
+                <p>Fooling the model during runtime by crafting inputs that cause misclassification.</p>
+                <p style="margin-top: 0.5rem;"><strong>Impact:</strong> Attackers bypass security controls; model makes wrong decisions intentionally.</p>
+                <p style="margin-top: 0.5rem; font-style: italic;">Example: Slightly modified image that looks identical to humans but is misclassified by AI.</p>
+            </div>
+            <div class="threat-card">
+                <i class="fas fa-skull" style="color:#ffb347; font-size: 1.5rem;"></i>
+                <h3 style="margin: 0.5rem 0;">Poisoning Attacks</h3>
+                <p>Corrupting the training data itself so the model learns harmful behaviors.</p>
+                <p style="margin-top: 0.5rem;"><strong>Impact:</strong> Model systematically produces wrong or harmful outputs; backdoors inserted.</p>
+                <p style="margin-top: 0.5rem; font-style: italic;">Example: Malicious data injected into training set causes model to misclassify specific inputs.</p>
+            </div>
+            <div class="threat-card">
+                <i class="fas fa-copy" style="color:#ffb347; font-size: 1.5rem;"></i>
+                <h3 style="margin: 0.5rem 0;">Model Extraction</h3>
+                <p>Stealing the model by querying it repeatedly to replicate its functionality.</p>
+                <p style="margin-top: 0.5rem;"><strong>Impact:</strong> Loss of intellectual property; competitive disadvantage; exposure of model vulnerabilities.</p>
+                <p style="margin-top: 0.5rem; font-style: italic;">Example: Competitor queries API thousands of times to reconstruct proprietary model.</p>
+            </div>
+        </div>
+
+        <div class="info-box info-blue">
+            <i class="fas fa-chart-line"></i> <strong>Continuous Measurement & Monitoring</strong>
+            <p style="margin-top: 0.5rem;">AI systems evolve. Data changes, user behavior changes, environment changes. Without continuous monitoring:</p>
+            <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                <li>Degradation goes unnoticed</li>
+                <li>Failure occurs suddenly and catastrophically</li>
+                <li>Root cause unknown</li>
+                <li>Organizations react in crisis mode</li>
+            </ul>
+            <p style="margin-top: 0.5rem;"><strong>With continuous monitoring:</strong> Alerts trigger when thresholds breached; proactive intervention before failure; drift detection identifies what changed.</p>
+        </div>
+
+        <h3 style="color:#0a2a44; margin-top: 1rem;"><i class="fas fa-chart-simple"></i> Accuracy Metrics Explained</h3>
+        <table class="metrics-table">
+            <thead>
+                <tr><th>Metric</th><th>Definition</th><th>Business Question</th></tr>
+            </thead>
+            <tbody>
+                <tr><td><strong>Precision</strong></td><td>True Positives / (True Positives + False Positives)</td><td>When model predicts "yes," how often is it right?</td></tr>
+                <tr><td><strong>Recall</strong></td><td>True Positives / (True Positives + False Negatives)</td><td>Of all actual "yes" cases, how many did the model catch?</td></tr>
+                <tr><td><strong>F1-Score</strong></td><td>Harmonic mean of precision and recall</td><td>Balanced measure of model performance</td></tr>
+                <tr><td><strong>Calibration</strong></td><td>Alignment between predicted probability and actual outcomes</td><td>When model says 80% confident, is it right 80% of the time?</td></tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- PANEL 4: 5 LONG QUESTIONS -->
+    <div class="tab-pane" id="longqa-pane">
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-quote-left"></i> 1. Explain the principle "What you don't measure, you can't manage" in AI governance. Why is continuous measurement critical?</div>
+            <div class="qa-answer"><strong>Answer:</strong> This principle means without measurement, risks become invisible and unmanageable. Bias without measurement: you cannot know if AI discriminates. Accuracy without measurement: you cannot know if model performs in production. Security without measurement: you cannot know if model can be attacked. Continuous measurement is critical because AI systems evolve—data changes, user behavior changes, environment changes. Without it, you discover failures only after they cause harm.</div>
+        </div>
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-cubes"></i> 2. Explain the three pillars of MEASURE: Bias, Accuracy, and Security. Why are each essential?</div>
+            <div class="qa-answer"><strong>Answer:</strong> <strong>Bias:</strong> Measures fairness across demographic groups. Essential because bias is invisible without measurement and causes reputational/regulatory harm.<br><br><strong>Accuracy:</strong> Measures model performance under real-world conditions (precision, recall, F1-scores, calibration). Essential because high accuracy in testing doesn't guarantee reliability in production.<br><br><strong>Security:</strong> Measures adversarial robustness and data integrity against evasion, poisoning, and extraction attacks. Essential because AI systems are vulnerable to attacks traditional security doesn't address.</div>
+        </div>
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-chart-line"></i> 3. What does "high accuracy in testing does not guarantee high reliability in reality" mean?</div>
+            <div class="qa-answer"><strong>Answer:</strong> Testing environments are controlled and idealized; production environments are messy and dynamic. Testing uses historical data; production uses new, unseen data. Testing environment is controlled; production has edge cases, noise, and adversarial inputs. Models degrade over time (drift). Consequences: organizations deploy models that fail in production; drift goes undetected until after harm occurs; false confidence in model reliability. Solution: continuous monitoring of precision, recall, F1-scores, and calibration in production.</div>
+        </div>
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-shield-haltered"></i> 4. What are the three types of security threats to AI systems? Describe each.</div>
+            <div class="qa-answer"><strong>Answer:</strong> <strong>Evasion Attacks:</strong> Fooling the model during runtime with crafted inputs that cause misclassification. Attackers bypass security controls; model makes wrong decisions intentionally.<br><br><strong>Poisoning Attacks:</strong> Corrupting training data so the model learns harmful behaviors. Model systematically produces wrong outputs; backdoors inserted.<br><br><strong>Model Extraction:</strong> Stealing the model by querying it repeatedly to replicate functionality. Loss of intellectual property; competitive disadvantage; exposure of vulnerabilities.</div>
+        </div>
+        <div class="qa-block">
+            <div class="qa-question"><i class="fas fa-chart-line"></i> 5. Why is continuous measurement and monitoring necessary for AI systems? What changes over time?</div>
+            <div class="qa-answer"><strong>Answer:</strong> AI systems are not static. <strong>Data changes:</strong> Customer demographics shift; fraud patterns evolve. <strong>User behavior changes:</strong> Users interact differently with the system. <strong>Environment changes:</strong> Economic conditions change; regulations update; competitors adapt. <strong>Model drift:</strong> Relationships between inputs and outputs change. Without continuous monitoring: degradation goes unnoticed; failure occurs suddenly; root cause unknown. With continuous monitoring: alerts trigger; proactive intervention before failure; models retrained before they fail.</div>
+        </div>
+    </div>
+
+    <!-- PANEL 5: 5 MCQs -->
+    <div class="tab-pane" id="mcq-pane">
+        <div class="mcq-item"><div class="mcq-question">1. What is the core principle of MEASURE?</div><div class="mcq-options">A) AI should be as accurate as possible<br>B) What you don't measure, you can't manage<br>C) Measurement is optional for low-risk AI<br>D) Only accuracy matters</div><div class="mcq-answer">✅ Answer: B</div></div>
+        <div class="mcq-item"><div class="mcq-question">2. Which of the following is NOT one of the three pillars of MEASURE?</div><div class="mcq-options">A) Bias<br>B) Accuracy<br>C) Speed<br>D) Security</div><div class="mcq-answer">✅ Answer: C (Speed is not a pillar)</div></div>
+        <div class="mcq-item"><div class="mcq-question">3. What is an evasion attack?</div><div class="mcq-options">A) Corrupting training data<br>B) Stealing the model<br>C) Fooling the model during runtime with crafted inputs<br>D) Encrypting the model</div><div class="mcq-answer">✅ Answer: C</div></div>
+        <div class="mcq-item"><div class="mcq-question">4. What does "high accuracy in testing does not guarantee high reliability in reality" mean?</div><div class="mcq-options">A) Testing is unnecessary<br>B) Models perform better in production<br>C) Production environments differ from testing; models may fail in real-world conditions<br>D) Accuracy doesn't matter</div><div class="mcq-answer">✅ Answer: C</div></div>
+        <div class="mcq-item"><div class="mcq-question">5. Why is continuous measurement critical for AI systems?</div><div class="mcq-options">A) AI systems are static and never change<br>B) AI systems evolve—data, user behavior, and environment change over time<br>C) Measurement is only needed at deployment<br>D) Testing once is sufficient</div><div class="mcq-answer">✅ Answer: B</div></div>
+    </div>
+
+    <!-- PANEL 6: QUICK REVISION -->
+    <div class="tab-pane" id="revision-pane">
+        <div class="revision-grid">
+            <div class="revision-card"><i class="fas fa-chart-line"></i> MEASURE One-Liner: "How bad is the risk?"</div>
+            <div class="revision-card"><i class="fas fa-quote-left"></i> Core Principle: "What you don't measure, you can't manage"</div>
+            <div class="revision-card"><i class="fas fa-balance-scale"></i> Bias: Fairness across demographic groups</div>
+            <div class="revision-card"><i class="fas fa-chart-simple"></i> Accuracy: Precision, recall, F1-score, calibration</div>
+            <div class="revision-card"><i class="fas fa-shield-haltered"></i> Security: Evasion, Poisoning, Extraction attacks</div>
+            <div class="revision-card"><i class="fas fa-chart-line"></i> Testing ≠ Reality: High accuracy in testing ≠ high reliability in reality</div>
+            <div class="revision-card"><i class="fas fa-sync-alt"></i> Continuous Monitoring: AI evolves—data, behavior, environment change</div>
+            <div class="revision-card"><i class="fas fa-eye"></i> Most Underestimated: Security metrics & continuous monitoring</div>
+        </div>
+        <hr>
+        <div class="info-box info-gold"><i class="fas fa-lightbulb"></i> Exam Tip: Remember the three pillars: Bias, Accuracy, Security. And the core principle: what you don't measure, you can't manage.</div>
+        <div class="info-box info-danger"><i class="fas fa-quote-left"></i> "What you don't measure, you can't manage. AI systems evolve—data changes, user behavior changes, environment changes. A model that performs well in testing may behave very differently in production. Without continuous measurement of bias, accuracy, and security, you are flying blind."</div>
+    </div>
+
+    <div class="nav-footer">
+        <button class="nav-btn" id="prevBtn"><i class="fas fa-chevron-left"></i> Previous</button>
+        <div class="page-indicator" id="pageIndicator">Overview (1/6)</div>
+        <button class="nav-btn" id="nextBtn">Next <i class="fas fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<script>
+    const tabs = ['summary', 'pillars', 'security', 'longqa', 'mcq', 'revision'];
+    const tabLabels = ['Overview', '3 Pillars', 'Security Threats', '5 Long Q&A', '5 MCQs', 'Quick Revision'];
+    let currentIndex = 0;
+
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const panes = document.querySelectorAll('.tab-pane');
+
+    function activateTab(index) {
+        tabBtns.forEach((btn, i) => {
+            if (i === index) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        panes.forEach((pane, i) => {
+            if (i === index) pane.classList.add('active-pane');
+            else pane.classList.remove('active-pane');
+        });
+        currentIndex = index;
+        const indicator = document.getElementById('pageIndicator');
+        if (indicator) indicator.innerText = `${tabLabels[currentIndex]} (${currentIndex+1}/${tabs.length})`;
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        if (prevBtn) prevBtn.disabled = (currentIndex === 0);
+        if (nextBtn) nextBtn.disabled = (currentIndex === tabs.length-1);
+    }
+
+    tabBtns.forEach((btn, idx) => {
+        btn.addEventListener('click', () => activateTab(idx));
+    });
+
+    document.getElementById('prevBtn')?.addEventListener('click', () => {
+        if (currentIndex > 0) activateTab(currentIndex - 1);
+    });
+    document.getElementById('nextBtn')?.addEventListener('click', () => {
+        if (currentIndex < tabs.length - 1) activateTab(currentIndex + 1);
+    });
+
+    activateTab(0);
+</script>
+</body>
+</html>

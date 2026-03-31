@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NIST AI RMF Cheat Sheet | AI Risk Management Framework</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #f0f4fa 0%, #e9eef4 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #0a2a44 0%, #1e3a5f 100%);
+            border-radius: 2rem;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            color: white;
+            text-align: center;
+            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.2);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .header h1 i {
+            color: #ffb347;
+            margin-right: 0.5rem;
+        }
+
+        .header .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .flow-cycle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .flow-cycle span {
+            background: rgba(255,255,255,0.2);
+            padding: 0.3rem 1rem;
+            border-radius: 2rem;
+        }
+
+        .flow-cycle i {
+            color: #ffb347;
+        }
+
+        /* Function Cards Grid */
+        .functions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .function-card {
+            background: white;
+            border-radius: 1.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .function-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px -10px rgba(0,0,0,0.15);
+        }
+
+        .function-header {
+            padding: 1.2rem 1.5rem;
+            color: white;
+        }
+
+        .function-header.gov { background: linear-gradient(135deg, #0a2a44, #1e3a5f); }
+        .function-header.map { background: linear-gradient(135deg, #2c5f8a, #1e4a6e); }
+        .function-header.measure { background: linear-gradient(135deg, #2d6a4f, #1e5940); }
+        .function-header.manage { background: linear-gradient(135deg, #9c4221, #7c2d12); }
+
+        .function-header h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .function-header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 0.3rem;
+        }
+
+        .one-liner {
+            background: rgba(255,255,255,0.15);
+            display: inline-block;
+            padding: 0.2rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.7rem;
+            margin-top: 0.5rem;
+        }
+
+        .function-content {
+            padding: 1.2rem 1.5rem;
+        }
+
+        .subcategory-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .subcategory-title {
+            font-weight: 700;
+            color: #0a2a44;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.6rem;
+            border-left: 3px solid #ffb347;
+            padding-left: 0.7rem;
+        }
+
+        .subcategory-items {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .subcategory-item {
+            background: #f1f5f9;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.75rem;
+            color: #1e293b;
+            transition: all 0.2s;
+        }
+
+        .subcategory-item:hover {
+            background: #ffb347;
+            color: white;
+        }
+
+        .explanation {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: #f8fafc;
+            border-radius: 0.75rem;
+            border-left: 3px solid #ffb347;
+            font-size: 0.85rem;
+            color: #475569;
+        }
+
+        /* Detailed Tables Section with Explanations */
+        .detailed-section {
+            background: white;
+            border-radius: 1.5rem;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .section-header {
+            background: #0a2a44;
+            padding: 1rem 1.5rem;
+            color: white;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .section-header i {
+            color: #ffb347;
+            font-size: 1.3rem;
+        }
+
+        .detailed-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .detailed-table th, .detailed-table td {
+            padding: 1rem 1.2rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+        }
+
+        .detailed-table th {
+            background: #f8fafc;
+            color: #0a2a44;
+            font-weight: 600;
+            width: 20%;
+        }
+
+        .detailed-table td {
+            color: #334155;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .detailed-table tr:hover td {
+            background: #fef9e6;
+        }
+
+        /* Flow Diagram */
+        .flow-diagram {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .flow-steps {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+
+        .flow-step {
+            background: #0a2a44;
+            color: white;
+            padding: 0.8rem 1.5rem;
+            border-radius: 2rem;
+            font-weight: 600;
+            min-width: 120px;
+        }
+
+        .flow-arrow {
+            font-size: 1.5rem;
+            color: #ffb347;
+        }
+
+        .loop {
+            margin-top: 1rem;
+            padding: 0.8rem;
+            background: #fef9e6;
+            border-radius: 2rem;
+            color: #0a2a44;
+            font-size: 0.9rem;
+            display: inline-block;
+        }
+
+        /* Memory Tips */
+        .memory-tips {
+            background: white;
+            border-radius: 1.5rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .memory-tips h3 {
+            color: #0a2a44;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .memory-card {
+            background: #f1f5f9;
+            padding: 1rem;
+            border-radius: 1rem;
+            text-align: center;
+        }
+
+        .memory-card .func {
+            font-weight: 700;
+            color: #ffb347;
+            font-size: 1.1rem;
+        }
+
+        .memory-card .pattern {
+            font-size: 0.8rem;
+            color: #475569;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            .detailed-table th, .detailed-table td {
+                display: block;
+                width: 100%;
+            }
+            .detailed-table th {
+                background: #eef2ff;
+                padding: 0.8rem 1rem;
+            }
+            .detailed-table td {
+                padding: 0.8rem 1rem;
+            }
+            .flow-step {
+                padding: 0.5rem 1rem;
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- Header -->
+    <div class="header">
+        <h1><i class="fas fa-shield-alt"></i> NIST AI Risk Management Framework</h1>
+        <div class="subtitle">AI RMF 1.0 — Complete Cheat Sheet with Explanations</div>
+        <div class="flow-cycle">
+            <span><i class="fas fa-gavel"></i> GOVERN</span>
+            <i class="fas fa-arrow-right"></i>
+            <span><i class="fas fa-map"></i> MAP</span>
+            <i class="fas fa-arrow-right"></i>
+            <span><i class="fas fa-chart-line"></i> MEASURE</span>
+            <i class="fas fa-arrow-right"></i>
+            <span><i class="fas fa-tools"></i> MANAGE</span>
+            <i class="fas fa-undo-alt"></i>
+            <span>Continuous Loop</span>
+        </div>
+    </div>
+
+    <!-- 4 Functions Overview Cards -->
+    <div class="functions-grid">
+        <!-- GOVERN Card -->
+        <div class="function-card">
+            <div class="function-header gov">
+                <h2><i class="fas fa-gavel"></i> GOVERN</h2>
+                <p>Set rules, assign responsibility, ensure accountability</p>
+                <div class="one-liner"><i class="fas fa-quote-left"></i> "Who owns it?"</div>
+            </div>
+            <div class="function-content">
+                <div class="subcategory-group">
+                    <div class="subcategory-title">1.x Policies & Compliance</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">1.1 Policies</span>
+                        <span class="subcategory-item">1.2 Legal requirements</span>
+                        <span class="subcategory-item">1.3 Risk strategy</span>
+                        <span class="subcategory-item">1.4 Documentation</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">2.x Roles & Training</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">2.1 Accountability</span>
+                        <span class="subcategory-item">2.2 Staff training</span>
+                        <span class="subcategory-item">2.3 Communication</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">3.x Diversity & Culture</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">3.1 Diversity promotion</span>
+                        <span class="subcategory-item">3.2 Inclusive design</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">4.x Culture & Transparency</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">4.1 Responsible culture</span>
+                        <span class="subcategory-item">4.2 Explainability</span>
+                        <span class="subcategory-item">4.3 Auditability</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">5.x Monitoring & Feedback</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">5.1 Continuous monitoring</span>
+                        <span class="subcategory-item">5.2 Stakeholder feedback</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">6.x Inventory & Lifecycle</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">6.1 AI inventory</span>
+                        <span class="subcategory-item">6.2 Lifecycle management</span>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <i class="fas fa-lightbulb" style="color:#ffb347;"></i> <strong>Key idea:</strong> "Set the rules and structure before doing anything else." Establishes policies, accountability, oversight, and organizational culture for managing AI risks.
+                </div>
+            </div>
+        </div>
+
+        <!-- MAP Card -->
+        <div class="function-card">
+            <div class="function-header map">
+                <h2><i class="fas fa-map"></i> MAP</h2>
+                <p>Understand system, environment, and risks</p>
+                <div class="one-liner"><i class="fas fa-quote-left"></i> "What can go wrong?"</div>
+            </div>
+            <div class="function-content">
+                <div class="subcategory-group">
+                    <div class="subcategory-title">1.x Context</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">1.1 Purpose</span>
+                        <span class="subcategory-item">1.2 Users</span>
+                        <span class="subcategory-item">1.3 Assumptions</span>
+                        <span class="subcategory-item">1.4 Data inputs</span>
+                        <span class="subcategory-item">1.5 Boundaries</span>
+                        <span class="subcategory-item">1.6 Architecture</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">2.x Risk Identification</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">2.1 Identify risks</span>
+                        <span class="subcategory-item">2.2 Misuse scenarios</span>
+                        <span class="subcategory-item">2.3 Likelihood/impact</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">3.x Capabilities & Limitations</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">3.1 Capabilities</span>
+                        <span class="subcategory-item">3.2 Limitations</span>
+                        <span class="subcategory-item">3.3 Scope</span>
+                        <span class="subcategory-item">3.4 Operating conditions</span>
+                        <span class="subcategory-item">3.5 Dependencies</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">4.x Impact Analysis</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">4.1 Individual impact</span>
+                        <span class="subcategory-item">4.2 Societal impact</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">5.x Stakeholders</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">5.1 Identify stakeholders</span>
+                        <span class="subcategory-item">5.2 Engage stakeholders</span>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <i class="fas fa-lightbulb" style="color:#ffb347;"></i> <strong>Key idea:</strong> "Understand the system and its risks before measuring or managing." Defines context, identifies risks, and understands impact on stakeholders.
+                </div>
+            </div>
+        </div>
+
+        <!-- MEASURE Card -->
+        <div class="function-card">
+            <div class="function-header measure">
+                <h2><i class="fas fa-chart-line"></i> MEASURE</h2>
+                <p>Evaluate risks using metrics and testing</p>
+                <div class="one-liner"><i class="fas fa-quote-left"></i> "How bad is the risk?"</div>
+            </div>
+            <div class="function-content">
+                <div class="subcategory-group">
+                    <div class="subcategory-title">1.x Metrics Selection</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">1.1 Select metrics</span>
+                        <span class="subcategory-item">1.2 Evaluation methods</span>
+                        <span class="subcategory-item">1.3 Document unmeasurable risks</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">2.x Testing & Validation</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">2.1 Performance</span>
+                        <span class="subcategory-item">2.2 Bias & fairness</span>
+                        <span class="subcategory-item">2.3 Robustness</span>
+                        <span class="subcategory-item">2.4 Privacy/security</span>
+                        <span class="subcategory-item">2.5 Data quality</span>
+                        <span class="subcategory-item">2.6 Safety</span>
+                        <span class="subcategory-item">2.7 Resilience</span>
+                        <span class="subcategory-item">2.8 Monitor behavior</span>
+                        <span class="subcategory-item">2.9 Explainability</span>
+                        <span class="subcategory-item">2.10 Human-AI interaction</span>
+                        <span class="subcategory-item">2.11 Validate assumptions</span>
+                        <span class="subcategory-item">2.12 Benchmark</span>
+                        <span class="subcategory-item">2.13 Document results</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">3.x Continuous Monitoring</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">3.1 Monitor deployed systems</span>
+                        <span class="subcategory-item">3.2 Detect drift</span>
+                        <span class="subcategory-item">3.3 Update metrics</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">4.x Feedback & Improvement</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">4.1 Use results for decisions</span>
+                        <span class="subcategory-item">4.2 Share findings</span>
+                        <span class="subcategory-item">4.3 Improve measurement</span>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <i class="fas fa-lightbulb" style="color:#ffb347;"></i> <strong>Key idea:</strong> "Quantify and test the risks." Evaluates how risky or trustworthy the AI is through metrics, testing, and continuous monitoring.
+                </div>
+            </div>
+        </div>
+
+        <!-- MANAGE Card -->
+        <div class="function-card">
+            <div class="function-header manage">
+                <h2><i class="fas fa-tools"></i> MANAGE</h2>
+                <p>Act on risks and continuously improve</p>
+                <div class="one-liner"><i class="fas fa-quote-left"></i> "What do we do about it?"</div>
+            </div>
+            <div class="function-content">
+                <div class="subcategory-group">
+                    <div class="subcategory-title">1.x Risk Prioritization</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">1.1 Prioritize risks</span>
+                        <span class="subcategory-item">1.2 Define risk tolerance</span>
+                        <span class="subcategory-item">1.3 Decide risk treatment</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">2.x Risk Mitigation</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">2.1 Implement mitigation</span>
+                        <span class="subcategory-item">2.2 Improve system design</span>
+                        <span class="subcategory-item">2.3 Controls & monitoring</span>
+                        <span class="subcategory-item">2.4 Ensure compliance</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">3.x Incident Response</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">3.1 Develop response plans</span>
+                        <span class="subcategory-item">3.2 Respond to failures</span>
+                    </div>
+                </div>
+                <div class="subcategory-group">
+                    <div class="subcategory-title">4.x Continuous Improvement</div>
+                    <div class="subcategory-items">
+                        <span class="subcategory-item">4.1 Continuously improve</span>
+                        <span class="subcategory-item">4.2 Update/retrain models</span>
+                        <span class="subcategory-item">4.3 Feed lessons back</span>
+                    </div>
+                </div>
+                <div class="explanation">
+                    <i class="fas fa-lightbulb" style="color:#ffb347;"></i> <strong>Key idea:</strong> "Act on the risks and keep improving." Takes action to reduce and control risks through mitigation, incident response, and continuous improvement.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Detailed Sub-functions Table - GOVERN with Explanations -->
+    <div class="detailed-section">
+        <div class="section-header">
+            <i class="fas fa-gavel"></i> GOVERN — Detailed Sub-functions with Explanations
+        </div>
+        <table class="detailed-table">
+            <tr><th>GOVERN 1.x</th><td><strong>Policies & legal compliance</strong> — Define laws, policies, documentation, and risk processes. Establish AI risk management policies aligned with organizational goals. Define legal and regulatory requirements. Integrate AI risk into enterprise risk strategy. Document processes, roles, and responsibilities.</td></tr>
+            <tr><th>GOVERN 2.x</th><td><strong>Roles & training</strong> — Assign responsibilities and ensure staff are trained. Assign accountability for AI risks. Train staff on AI risk and ethics. Ensure stakeholder communication.</td></tr>
+            <tr><th>GOVERN 3.x</th><td><strong>Culture & diversity</strong> — Use diverse teams and perspectives to reduce bias. Promote diversity to reduce bias. Encourage inclusive design.</td></tr>
+            <tr><th>GOVERN 4.x</th><td><strong>Risk culture & documentation</strong> — Promote safety-first mindset, testing, transparency. Build responsible AI culture. Ensure transparency and explainability. Maintain documentation and auditability.</td></tr>
+            <tr><th>GOVERN 5.x</th><td><strong>Monitoring & feedback</strong> — Continuous review and improvement of AI systems. Monitor AI systems continuously. Collect stakeholder feedback.</td></tr>
+            <tr><th>GOVERN 6.x</th><td><strong>Inventory & lifecycle</strong> — Maintain AI system inventory and handle decommissioning. Maintain AI system inventory. Manage lifecycle (deploy → retire).</td></tr>
+        </table>
+    </div>
+
+    <!-- Detailed Sub-functions Table - MAP with Explanations -->
+    <div class="detailed-section">
+        <div class="section-header">
+            <i class="fas fa-map"></i> MAP — Detailed Sub-functions with Explanations
+        </div>
+        <table class="detailed-table">
+            <tr><th>MAP 1.x</th><td><strong>Context establishment</strong> — Define purpose, scope, and environment of AI system. Define system purpose. Identify context and users. Identify assumptions and constraints. Define data inputs. Identify system boundaries. Document architecture.</td></tr>
+            <tr><th>MAP 2.x</th><td><strong>Risk identification</strong> — Identify potential risks (bias, safety, privacy, etc.). Identify risks (bias, safety, privacy). Identify misuse scenarios. Assess risk likelihood and impact.</td></tr>
+            <tr><th>MAP 3.x</th><td><strong>System & use-case definition</strong> — Define system boundaries, capabilities, and limitations. Define system capabilities. Identify limitations. Specify application scope. Define operating conditions. Identify dependencies.</td></tr>
+            <tr><th>MAP 4.x</th><td><strong>Impact assessment</strong> — Understand impact on users, society, environment. Assess impact on individuals. Assess societal/environmental impact.</td></tr>
+            <tr><th>MAP 5.x</th><td><strong>Stakeholder engagement</strong> — Identify affected users and stakeholders. Identify stakeholders. Engage stakeholders.</td></tr>
+        </table>
+    </div>
+
+    <!-- Detailed Sub-functions Table - MEASURE with Explanations -->
+    <div class="detailed-section">
+        <div class="section-header">
+            <i class="fas fa-chart-line"></i> MEASURE — Detailed Sub-functions with Explanations
+        </div>
+        <table class="detailed-table">
+            <tr><th>MEASURE 1.x</th><td><strong>Metrics selection</strong> — Choose how to measure risks identified in MAP. Select risk measurement metrics. Define evaluation methods. Document unmeasurable risks.</td></tr>
+            <tr><th>MEASURE 2.x</th><td><strong>Testing & validation</strong> — Test for bias, safety, robustness, explainability. Evaluate performance. Assess bias and fairness. Evaluate robustness. Assess privacy/security. Evaluate data quality. Test system safety. Test resilience to failures/attacks. Monitor system behavior. Ensure explainability. Evaluate human-AI interaction. Validate assumptions. Benchmark against standards. Document results.</td></tr>
+            <tr><th>MEASURE 3.x</th><td><strong>Ongoing evaluation</strong> — Continuous monitoring of performance. Monitor deployed systems. Detect drift. Update metrics.</td></tr>
+            <tr><th>MEASURE 4.x</th><td><strong>Feedback & improvement</strong> — Use results to improve system and governance. Use results for decisions. Share findings. Improve measurement process.</td></tr>
+        </table>
+    </div>
+
+    <!-- Detailed Sub-functions Table - MANAGE with Explanations -->
+    <div class="detailed-section">
+        <div class="section-header">
+            <i class="fas fa-tools"></i> MANAGE — Detailed Sub-functions with Explanations
+        </div>
+        <table class="detailed-table">
+            <tr><th>MANAGE 1.x</th><td><strong>Risk prioritization</strong> — Decide which risks matter most. Prioritize risks. Define risk tolerance. Decide risk treatment.</td></tr>
+            <tr><th>MANAGE 2.x</th><td><strong>Risk treatment</strong> — Mitigate risks (fix bias, improve safety, etc.). Implement mitigation strategies. Improve system design. Establish controls and monitoring. Ensure compliance.</td></tr>
+            <tr><th>MANAGE 3.x</th><td><strong>Incident response</strong> — Handle failures, errors, or harm events. Develop incident response plans. Respond to failures.</td></tr>
+            <tr><th>MANAGE 4.x</th><td><strong>Continuous improvement</strong> — Adapt system over time. Continuously improve systems. Update/retrain models. Feed lessons back into governance.</td></tr>
+        </table>
+    </div>
+
+    <!-- Flow Diagram -->
+    <div class="flow-diagram">
+<img src="lifecycle.png" alt="AI RMF Lifecycle — Continuous Loop" width="400" height="400">
+        <h3 style="color:#0a2a44; margin-bottom: 1rem;"><i class="fas fa-sync-alt"></i> AI RMF Lifecycle — Continuous Loop</h3>
+        <div class="flow-steps">
+            <div class="flow-step"><i class="fas fa-gavel"></i> GOVERN</div>
+            <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+            <div class="flow-step"><i class="fas fa-map"></i> MAP</div>
+            <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+            <div class="flow-step"><i class="fas fa-chart-line"></i> MEASURE</div>
+            <div class="flow-arrow"><i class="fas fa-arrow-right"></i></div>
+            <div class="flow-step"><i class="fas fa-tools"></i> MANAGE</div>
+        </div>
+        <div class="loop">
+            <i class="fas fa-undo-alt"></i> Continuous Loop — Risk management is iterative, not a one-time checklist
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.85rem; color: #475569;">
+            <i class="fas fa-info-circle"></i> GOVERN enables MAP → MAP feeds MEASURE → MEASURE informs MANAGE → MANAGE loops back to refine GOVERN
+        </p>
+    </div>
+
+    <!-- Memory Tips -->
+    <div class="memory-tips">
+        <h3><i class="fas fa-brain"></i> Memory Tips</h3>
+        <div class="memory-grid">
+            <div class="memory-card">
+                <div class="func">GOVERN</div>
+                <div class="pattern">1.x = Setup | 2.x = Roles | 3.x = Culture | 4.x = Transparency | 5.x = Monitor | 6.x = Lifecycle</div>
+            </div>
+            <div class="memory-card">
+                <div class="func">MAP</div>
+                <div class="pattern">1.x = Context | 2.x = Risks | 3.x = Capabilities | 4.x = Impact | 5.x = Stakeholders</div>
+            </div>
+            <div class="memory-card">
+                <div class="func">MEASURE</div>
+                <div class="pattern">1.x = Metrics | 2.x = Testing | 3.x = Monitoring | 4.x = Improvement</div>
+            </div>
+            <div class="memory-card">
+                <div class="func">MANAGE</div>
+                <div class="pattern">1.x = Prioritize | 2.x = Mitigate | 3.x = Respond | 4.x = Improve</div>
+            </div>
+        </div>
+        <div style="margin-top: 1rem; text-align: center; font-size: 0.85rem; color: #ffb347; background: #fef9e6; padding: 0.8rem; border-radius: 1rem;">
+            <i class="fas fa-quote-left"></i> Flow: GOVERN → MAP → MEASURE → MANAGE (Continuous Cycle)
+        </div>
+        <div style="margin-top: 0.8rem; text-align: center; font-size: 0.8rem; color: #0a2a44;">
+            <i class="fas fa-chart-simple"></i> Memory Tip: 1.x = Setup | 2.x = Execution | 3.x = Monitoring | 4.x = Improvement
+        </div>
+    </div>
+</div>
+</body>
+</html>
